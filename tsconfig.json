@@ -1,34 +1,116 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "forceConsistentCasingInFileNames": true,
-    // "strict": true,
-    "noImplicitOverride": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true,
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "target": "ES2022",
-    "module": "ES2022",
-    "useDefineForClassFields": false,
-    "lib": [
-      "ES2022",
-      "dom"
-    ]
-  },
-  "angularCompilerOptions": {
-    // "enableI18nLegacyMessageIdFormat": false,
-    // "strictInjectionParameters": true,
-    // "strictInputAccessModifiers": true,
-    // "strictTemplates": true
-  },
-  "useDefineForClassFields": false
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "src",
+        "outDir": "./dist/out-tsc",
+        "forceConsistentCasingInFileNames": true,
+        "noImplicitOverride": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "sourceMap": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "importHelpers": true,
+        "target": "ES2022",
+        "module": "ES2022",
+        "useDefineForClassFields": false,
+        "lib": [
+            "ES2022",
+            "dom"
+        ],
+        "paths": {
+            "jszip": [
+                "../node_modules/jszip/dist/jszip.min.js"
+            ],
+            "@environment": [
+                "environments/environment.ts"
+            ],
+            "@environments/*": [
+                "environments/*"
+            ],
+            "@app/utilities": [
+                "app/utilities"
+            ],
+            "@app/core/*": [
+                "app/core/*"
+            ],
+            "@app/theme": [
+                "app/theme"
+            ],
+            "@app/theme/components": [
+                "app/theme/components/index.ts"
+            ],
+            "@app/theme/layouts": [
+                "app/theme/layouts/index.ts"
+            ],
+            "@app/theme/directives": [
+                "app/theme/directives/index.ts"
+            ],
+            "@app/theme/pipes": [
+                "app/theme/pipes/index.ts"
+            ],
+            "@app/pages/*": [
+                "app/pages/*"
+            ],
+            "@app/shared/*": [
+                "app/shared/*.ts"
+            ],
+            "@app/shared/components": [
+                "app/shared/components/index.ts"
+            ],
+            "@app/shared/components/*": [
+                "app/shared/components/*"
+            ],
+            "@app/shared/models": [
+                "app/shared/models/index.ts"
+            ],
+            "@app/shared/constants": [
+                "app/shared/constants/index.ts"
+            ],
+            "@app/shared/enums": [
+                "app/shared/enums/index.ts"
+            ],
+            "@app/shared/modules/*": [
+                "app/shared/modules/*"
+            ],
+            "@app/services/endpoints": [
+                "app/services/endpoints.ts"
+            ],
+            "@app/services/*": [
+                "app/services/*"
+            ],
+            "@app/models": [
+                "app/models"
+            ],
+            "@app/models/*": [
+                "app/models/*"
+            ],
+            "@app/data/*": [
+                "app/data/*"
+            ],
+            "@app/state/*": [
+                "app/state/*"
+            ],
+            "@svg-icons": [
+                "assets/icons/svg-icons.constants.ts"
+            ],
+            "@app/common": [
+                "app/common"
+            ],
+            "@app/common/*": [
+                "app/common/*.ts"
+            ],
+        }
+    },
+    "angularCompilerOptions": {
+        // "enableI18nLegacyMessageIdFormat": false,
+        // "strictInjectionParameters": true,
+        // "strictInputAccessModifiers": true,
+        // "strictTemplates": true
+    },
+    "useDefineForClassFields": false
 }

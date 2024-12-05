@@ -6,7 +6,7 @@ import { catchError } from 'rxjs/operators';
 
 @Injectable({providedIn: 'root'})
 export class ApiService {
-  apiUrl = 'https://api.realworld.io/api';
+  apiUrl = 'https://real-world-app-39656dff2ddc.herokuapp.com/api';
   constructor(
     private http: HttpClient
   ) {}
