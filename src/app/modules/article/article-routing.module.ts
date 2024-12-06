@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ArticleComponent } from './article.component';
-import { ArticleResolver } from './resolver/article.resolver';
+import { ArticleResolver } from './resolvers/article.resolver';
 
 const routes: Routes = [
     {

@@ -6,7 +6,7 @@ import { SharedModule } from '@app/shared/shared.module';
 import { ArticleComponent } from './article.component';
 import { ArticleCommentComponent } from './components';
 import { MarkdownPipe } from './pipes';
-import { ArticleResolver } from './resolver';
+import { ArticleResolver } from './resolvers';
 
 const COMPONENTS = [
     ArticleComponent,

@@ -1,9 +1,14 @@
 import { NgModule } from '@angular/core';
 
-import { AuthComponent } from './auth.component';
-import { NoAuthGuard } from './no-auth-guard.service';
 import { SharedModule } from '@app/shared/shared.module';
 import { AuthRoutingModule } from './auth-routing.module';
+
+import { AuthComponent } from './auth.component';
+import { NoAuthGuard } from './guards';
+
+const GUARDS = [
+    NoAuthGuard,
+];
 
 @NgModule({
     imports: [
@@ -14,7 +19,7 @@ import { AuthRoutingModule } from './auth-routing.module';
         AuthComponent
     ],
     providers: [
-        NoAuthGuard
+        GUARDS
     ]
 })
 export class AuthModule { }
