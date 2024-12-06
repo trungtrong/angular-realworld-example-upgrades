@@ -1,25 +1,37 @@
 import { NgModule } from '@angular/core';
-
-import { ArticleComponent } from './article.component';
-import { ArticleCommentComponent } from './article-comment.component';
-import { ArticleResolver } from './article-resolver.service';
-import { MarkdownPipe } from './markdown.pipe';
-import { SharedModule } from '@app/shared';
+//
 import { ArticleRoutingModule } from './article-routing.module';
+import { SharedModule } from '@app/shared/shared.module';
+//
+import { ArticleComponent } from './article.component';
+import { ArticleCommentComponent } from './components';
+import { MarkdownPipe } from './pipes';
+import { ArticleResolver } from './resolver';
 
-@NgModule({
-  imports: [
-    SharedModule,
-    ArticleRoutingModule
-  ],
-  declarations: [
+const COMPONENTS = [
     ArticleComponent,
     ArticleCommentComponent,
-    MarkdownPipe
-  ],
+];
 
-  providers: [
-    ArticleResolver
-  ]
+const PIPES = [
+    MarkdownPipe,
+];
+
+const RESOLVERS = [
+    ArticleResolver,
+];
+
+@NgModule({
+    declarations: [
+        COMPONENTS,
+        PIPES
+    ],
+    imports: [
+        SharedModule,
+        ArticleRoutingModule
+    ],
+    providers: [
+        RESOLVERS
+    ]
 })
-export class ArticleModule {}
+export class ArticleModule { }

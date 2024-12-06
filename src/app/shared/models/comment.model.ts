@@ -1,8 +1,12 @@
 import { Profile } from './profile.model';
 
-export interface Comment {
+export class Comment {
     id: number;
     body: string;
     createdAt: string;
     author: Profile;
+
+    constructor(init?: Partial<Comment>) {
+        Object.assign(this, init);
+    }
 }
