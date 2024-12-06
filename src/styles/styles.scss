@@ -1,0 +1,31 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+//
+@import "variables";
+@import "utilities";
+//
+@import "mixins";
+//
+@import "shared";
+@import "layouts";
+@import "components";
+
+html, body {
+    margin: 0;
+    min-height: 100%;
+    height: 100%;
+    font-family: "Roboto", sans-serif;
+}
+
+*, :after, :before {
+    box-sizing: border-box;
+
+    &:focus {
+        outline: none;
+    }
+}
+
+
+
+

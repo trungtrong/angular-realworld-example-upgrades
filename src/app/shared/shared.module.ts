@@ -3,39 +3,51 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { ArticleListComponent, ArticleMetaComponent, ArticlePreviewComponent } from './article-helpers';
-import { FavoriteButtonComponent, FollowButtonComponent } from './buttons';
-import { ListErrorsComponent } from './list-errors.component';
-import { ShowAuthedDirective } from './show-authed.directive';
+import {
+    ArticleListComponent,
+    ArticleMetaComponent,
+    ArticlePreviewComponent
+} from './features';
+import {
+    ListErrorsComponent,
+    FavoriteButtonComponent,
+    FollowButtonComponent,
+} from './components';
+import { AppCommonModule } from '@app/common/common.module';
 
-@NgModule({
-  imports: [
+const BASE_MODULES = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule
-  ],
-  declarations: [
+];
+
+const FEATURES = [
     ArticleListComponent,
     ArticleMetaComponent,
     ArticlePreviewComponent,
+];
+
+const COMPONENT = [
+    ListErrorsComponent,
     FavoriteButtonComponent,
     FollowButtonComponent,
-    ListErrorsComponent,
-    ShowAuthedDirective
-  ],
-  exports: [
-    ArticleListComponent,
-    ArticleMetaComponent,
-    ArticlePreviewComponent,
-    CommonModule,
-    FavoriteButtonComponent,
-    FollowButtonComponent,
-    FormsModule,
-    ReactiveFormsModule,
-    ListErrorsComponent,
-    RouterModule,
-    ShowAuthedDirective
-  ]
+];
+
+@NgModule({
+    declarations: [
+        FEATURES,
+        COMPONENT,
+    ],
+    imports: [
+        BASE_MODULES,
+        AppCommonModule,
+    ],
+    exports: [
+        BASE_MODULES,
+        //
+        FEATURES,
+        COMPONENT,
+    ]
 })
-export class SharedModule {}
+export class SharedModule { }

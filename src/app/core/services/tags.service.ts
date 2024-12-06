@@ -4,15 +4,15 @@ import { Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { map } from 'rxjs/operators';
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: 'root' })
 export class TagsService {
-  constructor (
-    private apiService: ApiService
-  ) {}
+    constructor(
+        private apiService: ApiService
+    ) { }
 
-  getAll(): Observable<[string]> {
-    return this.apiService.get('/tags')
-          .pipe(map(data => data.tags));
-  }
+    getAll(): Observable<[string]> {
+        return this.apiService.get('/tags')
+            .pipe(map(data => data.tags));
+    }
 
 }
