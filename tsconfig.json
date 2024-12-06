@@ -53,7 +53,7 @@
             "@app/theme/pipes": [
                 "app/theme/pipes/index.ts"
             ],
-            "@app/pages/*": [
+            "@app/modules/*": [
                 "app/pages/*"
             ],
             "@app/shared/*": [
@@ -107,10 +107,12 @@
         }
     },
     "angularCompilerOptions": {
-        // "enableI18nLegacyMessageIdFormat": false,
-        // "strictInjectionParameters": true,
-        // "strictInputAccessModifiers": true,
-        // "strictTemplates": true
+        "annotationsAs": "static fields",
+        "preserveWhitespaces": false,
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "strictTemplates": true
     },
     "useDefineForClassFields": false
 }
