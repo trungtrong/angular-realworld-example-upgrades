@@ -1,6 +1,6 @@
 import { Profile } from './profile.model';
 
-export interface Article {
+export class Article {
     slug: string;
     title: string;
     description: string;
@@ -11,4 +11,8 @@ export interface Article {
     favorited: boolean;
     favoritesCount: number;
     author: Profile;
+
+    constructor(init?: Partial<Article>) {
+        Object.assign(this, init);
+    }
 }

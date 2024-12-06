@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { EditorComponent } from './editor.component';
-import { EditableArticleResolver } from './editable-article-resolver.service';
+//
 import { AuthGuard } from '@app/core/guards';
-import { SharedModule } from '@app/shared/shared.module';
+import { EditorComponent } from './editor.component';
+import { EditableArticleResolver } from './resolvers/editable-article.resolver';
 
 const routes: Routes = [
     {
