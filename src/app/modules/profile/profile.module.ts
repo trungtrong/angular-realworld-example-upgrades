@@ -1,11 +1,21 @@
 import { NgModule } from '@angular/core';
 
-import { ProfileArticlesComponent } from './profile-articles.component';
-import { ProfileComponent } from './profile.component';
-import { ProfileFavoritesComponent } from './profile-favorites.component';
-import { ProfileResolver } from './profile-resolver.service';
+import { ProfileResolver } from './resolvers';
 import { SharedModule } from '@app/shared/shared.module';
 import { ProfileRoutingModule } from './profile-routing.module';
+//
+import { ProfileComponent } from './profile.component';
+import { ProfileArticlesComponent, ProfileFavoritesComponent } from './components';
+
+const COMPONENTS = [
+    ProfileComponent,
+    ProfileArticlesComponent,
+    ProfileFavoritesComponent
+];
+
+const RESOLVERS = [
+    ProfileResolver,
+];
 
 @NgModule({
     imports: [
@@ -13,12 +23,10 @@ import { ProfileRoutingModule } from './profile-routing.module';
         ProfileRoutingModule
     ],
     declarations: [
-        ProfileArticlesComponent,
-        ProfileComponent,
-        ProfileFavoritesComponent
+        COMPONENTS
     ],
     providers: [
-        ProfileResolver
+        RESOLVERS
     ]
 })
 export class ProfileModule { }

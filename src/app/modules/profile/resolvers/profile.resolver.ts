@@ -6,7 +6,6 @@ import { catchError } from 'rxjs/operators';
 import { Profile } from '@app/shared/models/profile.model';
 import { ProfilesService } from '@app/core/services';
 
-
 @Injectable()
 export class ProfileResolver implements Resolve<Profile> {
     constructor(
@@ -19,6 +18,7 @@ export class ProfileResolver implements Resolve<Profile> {
     ): Observable<any> {
         return this.profilesService.get(route.params['username'] as string)
             .pipe(
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 catchError(() => this.router.navigateByUrl('/'))
             );
 

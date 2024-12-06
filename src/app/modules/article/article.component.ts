@@ -11,6 +11,7 @@ import {
 import {
     Article,
     Comment,
+    Errors,
     User,
 } from '@app/shared/models';
 
@@ -24,7 +25,7 @@ export class ArticleComponent implements OnInit {
     canModify: boolean;
     comments: Comment[];
     commentControl = new UntypedFormControl();
-    commentFormErrors = {};
+    commentFormErrors = new Errors();
     isSubmitting = false;
     isDeleting = false;
 
@@ -84,7 +85,7 @@ export class ArticleComponent implements OnInit {
 
     addComment() {
         this.isSubmitting = true;
-        this.commentFormErrors = {};
+        this.commentFormErrors = new Errors();
 
         const commentBody = this.commentControl.value;
         this.commentsService.add(this.article.slug, commentBody).subscribe(

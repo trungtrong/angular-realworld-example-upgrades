@@ -8,8 +8,6 @@ import {
 } from './directives';
 import {
     FunctionPipe,
-    LookupValuePipe,
-    TimeAgoPipe
 } from './pipes';
 
 const DIRECTIVES = [
@@ -20,8 +18,6 @@ const DIRECTIVES = [
 
 const PIPES = [
     FunctionPipe,
-    TimeAgoPipe,
-    LookupValuePipe
 ];
 
 @NgModule({

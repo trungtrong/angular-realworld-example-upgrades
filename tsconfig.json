@@ -54,7 +54,7 @@
                 "app/theme/pipes/index.ts"
             ],
             "@app/modules/*": [
-                "app/pages/*"
+                "app/modules/*"
             ],
             "@app/shared/*": [
                 "app/shared/*.ts"
