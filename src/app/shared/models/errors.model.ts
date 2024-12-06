@@ -3,4 +3,5 @@ export class Errors {
 
     constructor(init?: Partial<Errors>) {
         Object.assign(this, init);
-    }}
+    }
+}
