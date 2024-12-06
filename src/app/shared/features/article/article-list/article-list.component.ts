@@ -4,7 +4,7 @@ import { ArticlesService } from '@app/core/services';
 import { Article, ArticleListConfig } from '@app/shared/models';
 @Component({
     selector: 'app-article-list',
-    styleUrls: ['article-list.component.css'],
+    styleUrls: ['article-list.component.scss'],
     templateUrl: './article-list.component.html'
 })
 export class ArticleListComponent {

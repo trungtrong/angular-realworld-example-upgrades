@@ -2,15 +2,15 @@
     "name": "angular-realworld",
     "version": "0.0.0",
     "license": "MIT",
+    "engines": {
+        "node": "^14.20.0 || ^16.13.0 || ^18.10.0"
+    },
     "scripts": {
         "ng": "ng",
         "start": "ng serve",
         "build": "ng build",
         "test": "ng test",
         "lint": "ng lint --force"
-    },
-    "engines": {
-        "node": "^14.20.0 || ^16.13.0 || ^18.10.0"
     },
     "private": true,
     "dependencies": {

@@ -5,6 +5,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpTokenInterceptor } from './interceptors/http-token.interceptor';
 import { FooterComponent, HeaderComponent } from './layout';
 import { RouterModule } from '@angular/router';
+import { AppCommonModule } from '@app/common/common.module';
 
 const BASE_MODULES = [
     CommonModule,
@@ -22,7 +23,8 @@ const COMPONENTS = [
         COMPONENTS
     ],
     imports: [
-        BASE_MODULES
+        BASE_MODULES,
+        AppCommonModule,
     ],
     exports: [
         BASE_MODULES,
