@@ -4,6 +4,7 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 import { PageNotFoundComponent } from './core/pages';
 import { AuthRoutes } from './modules/auth/auth.routing';
 import { ArticleRoutes } from './modules/article/article.routing';
+import { EditorRoutes } from './modules/editor/editor.routing';
 
 const routes: Routes = [
     ...AuthRoutes,
@@ -15,10 +16,7 @@ const routes: Routes = [
         path: 'profile',
         loadChildren: () => import('./modules/profile/profile.module').then(m => m.ProfileModule)
     },
-    {
-        path: 'editor',
-        loadChildren: () => import('./modules/editor/editor.module').then(m => m.EditorModule)
-    },
+    ...EditorRoutes,
     ...ArticleRoutes,
     { path: '**', component: PageNotFoundComponent }
 ];
