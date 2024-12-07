@@ -1,52 +1,64 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
+import { takeUntil, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 //
-import { TagsService } from '@app/core/services';
+import { ArticleListComponent } from '@app/shared/features/index';
+import { ShowAuthedDirective } from '@app/common/directives/show-authed.directive';
 import { ArticleListConfig } from '@app/shared/models';
-
+import { TagsService, UserService } from '@app/core/services';
 
 @Component({
     selector: 'app-home-page',
     templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css']
+    styleUrls: ['./home.component.css'],
+    imports: [
+        NgClass,
+        ArticleListComponent,
+        NgForOf,
+        ShowAuthedDirective
+    ],
+    standalone: true
 })
-export class HomeComponent implements OnInit {
-    constructor(
-        private router: Router,
-        private tagsService: TagsService,
-        private route: ActivatedRoute
-    ) { }
-
-    isAuthenticated: boolean;
+export class HomeComponent implements OnInit, OnDestroy {
+    isAuthenticated = false;
     listConfig: ArticleListConfig = {
         type: 'all',
         filters: {}
     };
-    tags: Array<string> = [];
+    tags$ = inject(TagsService).getAll().pipe(tap(() => this.tagsLoaded = true));
     tagsLoaded = false;
+    destroy$ = new Subject<void>();
 
-    ngOnInit() {
-        this.route.data.subscribe((data: { isAuthenticated: boolean }) => {
-            this.isAuthenticated = data.isAuthenticated;
-            // set the article list accordingly
-            if (data.isAuthenticated) {
-                this.setListTo('feed');
-            } else {
-                this.setListTo('all');
-            }
-        });
+    constructor(
+        private readonly router: Router,
+        private readonly userService: UserService,
+    ) {
+    }
 
-        this.tagsService.getAll()
-            .subscribe(tags => {
-                this.tags = tags;
-                this.tagsLoaded = true;
-            });
+    ngOnInit(): void {
+        this.userService.isAuthenticated.pipe(
+            tap(isAuthenticated => {
+                if (isAuthenticated) {
+                    this.setListTo('feed');
+                } else {
+                    this.setListTo('all');
+                }
+            }),
+            takeUntil(this.destroy$)
+        ).subscribe((isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated);
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
     setListTo(type: string = '', filters: object = {}) {
         // If feed is requested but user is not authenticated, redirect to login
         if (type === 'feed' && !this.isAuthenticated) {
-            this.router.navigateByUrl('/login');
+            void this.router.navigateByUrl('/login');
             return;
         }
 

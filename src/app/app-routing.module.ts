@@ -5,8 +5,10 @@ import { PageNotFoundComponent } from './core/pages';
 import { AuthRoutes } from './modules/auth/auth.routing';
 import { ArticleRoutes } from './modules/article/article.routing';
 import { EditorRoutes } from './modules/editor/editor.routing';
+import { HomeRoutes } from './modules/home/home.routing';
 
 const routes: Routes = [
+    ...HomeRoutes,
     ...AuthRoutes,
     {
         path: 'settings',
