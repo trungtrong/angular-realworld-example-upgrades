@@ -1,42 +1,63 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { map, switchMap } from 'rxjs/operators';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
+import { combineLatest, of, Subject, throwError } from 'rxjs';
+import { AsyncPipe, NgIf } from '@angular/common';
 //
-import { Profile, User } from '@app/shared/models';
-import { UserService } from '@app/core/services';
+import { FollowButtonComponent } from '@app/shared/components';
+import { Profile } from '@app/shared/models';
+import { ProfilesService, UserService } from '@app/core/services';
 
 @Component({
     selector: 'app-profile-page',
-    templateUrl: './profile.component.html'
+    templateUrl: './profile.component.html',
+    imports: [
+        FollowButtonComponent,
+        NgIf,
+        RouterLink,
+        RouterLinkActive,
+        RouterOutlet
+    ],
+    standalone: true
 })
-export class ProfileComponent implements OnInit {
-    constructor(
-        private route: ActivatedRoute,
-        private userService: UserService
-    ) { }
+export class ProfileComponent implements OnInit, OnDestroy {
+    profile!: Profile;
+    isUser: boolean = false;
+    destroy$ = new Subject<void>();
 
-    profile: Profile;
-    currentUser: User;
-    isUser: boolean;
+    constructor(
+        private readonly route: ActivatedRoute,
+        private readonly router: Router,
+        private readonly userService: UserService,
+        private readonly profileService: ProfilesService
+    ) {
+    }
 
     ngOnInit() {
-        this.route.data.pipe(
-            map(data => data['profile']),
-            switchMap((profile: Profile) => {
-                this.profile = profile;
-
-                // Load the current user's data.
-                return this.userService.currentUser;
-            })
-        ).subscribe(
-            (user: User) => {
-                this.currentUser = user;
-                this.isUser = (this.currentUser.username === this.profile.username);
-            });
+        this.route.params.pipe(
+            map(({ username }) => username),
+            switchMap(username => this.profileService.get(username as string)),
+            catchError((error) => {
+                void this.router.navigateByUrl('/');
+                return throwError(error);
+            }),
+            switchMap(profile => combineLatest([
+                of(profile),
+                this.userService.currentUser
+            ])),
+            takeUntil(this.destroy$)
+        ).subscribe(([profile, user]) => {
+            this.profile = profile;
+            this.isUser = profile.username === user?.username;
+        });
     }
 
-    onToggleFollowing(following: boolean) {
-        this.profile.following = following;
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
+    onToggleFollowing(profile: Profile) {
+        this.profile = profile;
+    }
 }

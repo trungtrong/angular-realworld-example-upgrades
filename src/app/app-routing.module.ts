@@ -6,6 +6,7 @@ import { AuthRoutes } from './modules/auth/auth.routing';
 import { ArticleRoutes } from './modules/article/article.routing';
 import { EditorRoutes } from './modules/editor/editor.routing';
 import { HomeRoutes } from './modules/home/home.routing';
+import { ProfileRoutes } from './modules/profile/profile.routing';
 
 const routes: Routes = [
     ...HomeRoutes,
@@ -14,10 +15,7 @@ const routes: Routes = [
         path: 'settings',
         loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule)
     },
-    {
-        path: 'profile',
-        loadChildren: () => import('./modules/profile/profile.module').then(m => m.ProfileModule)
-    },
+    ...ProfileRoutes,
     ...EditorRoutes,
     ...ArticleRoutes,
     { path: '**', component: PageNotFoundComponent }
