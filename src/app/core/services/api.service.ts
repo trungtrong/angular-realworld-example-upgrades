@@ -15,27 +15,27 @@ export class ApiService {
         return throwError(error.error);
     }
 
-    get(path: string, params: HttpParams = new HttpParams()): Observable<any> {
-        return this.http.get(`${this.apiUrl}${path}`, { params })
+    get<T>(path: string, params: HttpParams = new HttpParams()): Observable<T> {
+        return this.http.get<T>(`${this.apiUrl}${path}`, { params })
             .pipe(catchError(this.formatErrors));
     }
 
-    put(path: string, body: Object = {}): Observable<any> {
-        return this.http.put(
+    put<T>(path: string, body: object = {}): Observable<T> {
+        return this.http.put<T>(
             `${this.apiUrl}${path}`,
             JSON.stringify(body)
         ).pipe(catchError(this.formatErrors));
     }
 
-    post(path: string, body: Object = {}): Observable<any> {
-        return this.http.post(
+    post<T>(path: string, body: object = {}): Observable<T> {
+        return this.http.post<T>(
             `${this.apiUrl}${path}`,
             JSON.stringify(body)
         ).pipe(catchError(this.formatErrors));
     }
 
-    delete(path: string): Observable<any> {
-        return this.http.delete(
+    delete<T>(path: string): Observable<T> {
+        return this.http.delete<T>(
             `${this.apiUrl}${path}`
         ).pipe(catchError(this.formatErrors));
     }

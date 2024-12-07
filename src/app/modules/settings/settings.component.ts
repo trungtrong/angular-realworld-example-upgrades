@@ -56,8 +56,8 @@ export class SettingsComponent implements OnInit {
         this.userService
             .update(this.user)
             .subscribe(
-                (updatedUser) => {
-                    this.router.navigateByUrl('/profile/' + updatedUser.username).then();
+                (data) => {
+                    this.router.navigateByUrl('/profile/' + data?.user?.username).then();
                 },
                 err => {
                     this.errors = err;

@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 //
 import { PageNotFoundComponent } from './core/pages';
+import { AuthRoutes } from './modules/auth/auth.routing';
 
 const routes: Routes = [
+    ...AuthRoutes,
     {
         path: 'settings',
         loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule)

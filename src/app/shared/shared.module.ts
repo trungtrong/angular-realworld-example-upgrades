@@ -9,7 +9,6 @@ import {
     ArticlePreviewComponent
 } from './features';
 import {
-    ListErrorsComponent,
     FavoriteButtonComponent,
     FollowButtonComponent,
 } from './components';
@@ -29,7 +28,6 @@ const FEATURES = [
 ];
 
 const COMPONENT = [
-    ListErrorsComponent,
     FavoriteButtonComponent,
     FollowButtonComponent,
 ];
