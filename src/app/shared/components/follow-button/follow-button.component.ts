@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { Router } from '@angular/router';
 import { concatMap, tap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -8,7 +9,11 @@ import { Profile } from '../../models';
 
 @Component({
     selector: 'app-follow-button',
-    templateUrl: './follow-button.component.html'
+    templateUrl: './follow-button.component.html',
+    imports: [
+        NgClass
+    ],
+    standalone: true
 })
 export class FollowButtonComponent {
     constructor(

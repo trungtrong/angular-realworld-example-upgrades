@@ -11,8 +11,8 @@ import {
 import {
     FavoriteButtonComponent,
     FollowButtonComponent,
+    ListErrorsComponent,
 } from './components';
-import { AppCommonModule } from '@app/common/common.module';
 
 const BASE_MODULES = [
     CommonModule,
@@ -30,16 +30,16 @@ const FEATURES = [
 const COMPONENT = [
     FavoriteButtonComponent,
     FollowButtonComponent,
+    ListErrorsComponent,
 ];
 
 @NgModule({
     declarations: [
         FEATURES,
-        COMPONENT,
     ],
     imports: [
         BASE_MODULES,
-        AppCommonModule,
+        COMPONENT,
     ],
     exports: [
         BASE_MODULES,

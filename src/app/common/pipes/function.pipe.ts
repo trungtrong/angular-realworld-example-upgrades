@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
     name: 'function',
+    standalone: true
 })
 // NOTE: Use Arrow Function Expression when applying function pipe
 export class FunctionPipe implements PipeTransform {
