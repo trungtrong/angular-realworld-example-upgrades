@@ -19,11 +19,11 @@ export class EditableArticleResolver implements Resolve<Article> {
         state: RouterStateSnapshot
     ): Observable<any> {
 
-        return this.articlesService.get(route.params['slug'])
+        return this.articlesService.get(route.params['slug'] as string)
             .pipe(
                 map(
                     article => {
-                        if (this.userService.getCurrentUser().username === article.author.username) {
+                        if (this.userService.currentUserData.username === article.author.username) {
                             return article;
                         } else {
                             return this.router.navigateByUrl('/');

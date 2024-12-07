@@ -14,6 +14,9 @@ import { ApiService } from './api.service';
 export class UserService {
     private currentUserSubject = new BehaviorSubject<User | null>(null);
     public currentUser = this.currentUserSubject.asObservable().pipe(distinctUntilChanged());
+    get currentUserData() {
+        return this.currentUserSubject.value;
+    }
 
     public isAuthenticated = this.currentUser.pipe(map(user => !!user));
 

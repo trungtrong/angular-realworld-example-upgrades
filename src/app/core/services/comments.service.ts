@@ -12,20 +12,20 @@ export class CommentsService {
         private apiService: ApiService
     ) { }
 
-    add(slug, payload): Observable<Comment> {
+    add(slug: string, payload): Observable<Comment> {
         return this.apiService
-            .post(
-                `/articles/${slug}/comments`,
-                { comment: { body: payload } }
-            ).pipe(map(data => data.comment));
+            .post<{comment: Comment}>(
+            `/articles/${slug}/comments`,
+            { comment: { body: payload } }
+        ).pipe(map(data => data.comment));
     }
 
-    getAll(slug): Observable<Comment[]> {
-        return this.apiService.get(`/articles/${slug}/comments`)
+    getAll(slug: string): Observable<Comment[]> {
+        return this.apiService.get<{comments: Comment[]}>(`/articles/${slug}/comments`)
             .pipe(map(data => data.comments));
     }
 
-    destroy(commentId, articleSlug) {
+    destroy(commentId: string, articleSlug: string) {
         return this.apiService
             .delete(`/articles/${articleSlug}/comments/${commentId}`);
     }

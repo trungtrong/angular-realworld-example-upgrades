@@ -4,8 +4,6 @@ import { RouterModule } from '@angular/router';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 //
 import { HttpTokenInterceptor } from './interceptors/http-token.interceptor';
-import { FooterComponent, HeaderComponent } from './layout';
-import { AppCommonModule } from '@app/common/common.module';
 import { ErrorInterceptor, TokenInterceptor } from './interceptors';
 
 const BASE_MODULES = [
@@ -14,22 +12,12 @@ const BASE_MODULES = [
     HttpClientModule
 ];
 
-const COMPONENTS = [
-    FooterComponent,
-    HeaderComponent,
-];
-
 @NgModule({
-    declarations: [
-        COMPONENTS
-    ],
     imports: [
         BASE_MODULES,
-        AppCommonModule,
     ],
     exports: [
         BASE_MODULES,
-        COMPONENTS
     ],
     providers: [
         {

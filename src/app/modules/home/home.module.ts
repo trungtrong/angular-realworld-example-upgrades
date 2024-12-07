@@ -5,7 +5,6 @@ import { HomeRoutingModule } from './home-routing.module';
 
 import { HomeComponent } from './home.component';
 import { HomeAuthResolver } from './resolvers';
-import { AppCommonModule } from '@app/common/common.module';
 
 const COMPONENTS = [
     HomeComponent,
@@ -19,7 +18,6 @@ const RESOLVERS = [
     imports: [
         SharedModule,
         HomeRoutingModule,
-        AppCommonModule
     ],
     declarations: [
         COMPONENTS

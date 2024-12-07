@@ -10,8 +10,8 @@ export class TagsService {
         private apiService: ApiService
     ) { }
 
-    getAll(): Observable<[string]> {
-        return this.apiService.get('/tags')
+    getAll(): Observable<string[]> {
+        return this.apiService.get<{tags: string[]}>('/tags')
             .pipe(map(data => data.tags));
     }
 
