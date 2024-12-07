@@ -23,13 +23,13 @@ interface AuthForm {
 @Component({
     selector: 'app-auth-page',
     templateUrl: './auth.component.html',
+    standalone: true,
     imports: [
         RouterLink,
         NgIf,
         ListErrorsComponent,
         ReactiveFormsModule
-    ],
-    standalone: true
+    ]
 })
 export class AuthComponent implements OnInit, OnDestroy {
     authType = '';

@@ -8,7 +8,6 @@ import { CoreModule } from '@app/core/core.module';
 import { SharedModule } from '@app/shared/shared.module';
 import { HomeModule } from '@app/modules/home/home.module';
 import { FooterComponent, HeaderComponent } from './core/layout';
-//
 
 const COMPONENTS = [
     FooterComponent,
@@ -24,6 +23,7 @@ const COMPONENTS = [
         CoreModule,
         SharedModule,
         HomeModule,
+        //
         AppRoutingModule,
         //
         COMPONENTS
