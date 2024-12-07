@@ -25,7 +25,7 @@ export class CommentsService {
             .pipe(map(data => data.comments));
     }
 
-    destroy(commentId: string, articleSlug: string) {
+    delete(commentId: string, articleSlug: string) {
         return this.apiService
             .delete(`/articles/${articleSlug}/comments/${commentId}`);
     }

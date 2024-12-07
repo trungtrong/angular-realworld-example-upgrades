@@ -3,6 +3,7 @@ import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 //
 import { PageNotFoundComponent } from './core/pages';
 import { AuthRoutes } from './modules/auth/auth.routing';
+import { ArticleRoutes } from './modules/article/article.routing';
 
 const routes: Routes = [
     ...AuthRoutes,
@@ -18,10 +19,7 @@ const routes: Routes = [
         path: 'editor',
         loadChildren: () => import('./modules/editor/editor.module').then(m => m.EditorModule)
     },
-    {
-        path: 'article',
-        loadChildren: () => import('./modules/article/article.module').then(m => m.ArticleModule)
-    },
+    ...ArticleRoutes,
     { path: '**', component: PageNotFoundComponent }
 ];
 

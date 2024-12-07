@@ -1,4 +1,5 @@
-<div class="card">
+<div class="card"
+     *ngIf="comment">
     <div class="card-block">
         <p class="card-text">
             {{ comment.body }}
@@ -19,9 +20,9 @@
             {{ comment.createdAt | date: 'longDate' }}
         </span>
         <span class="mod-options"
-              [hidden]="!canModify">
+              *ngIf="canModify$ | async">
             <i class="ion-trash-a"
-               (click)="deleteClicked()"></i>
+               (click)="delete.emit(true)"></i>
         </span>
     </div>
 </div>

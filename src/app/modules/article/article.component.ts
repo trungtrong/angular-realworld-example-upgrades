@@ -1,61 +1,94 @@
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
-
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
+import { catchError, switchMap, takeUntil } from 'rxjs/operators';
+import { of, Subject, combineLatest, throwError } from 'rxjs';
+import { Article, Comment, Errors, Profile, User } from '@app/shared/models';
+//
+import { ArticleMetaComponent } from '@app/shared/features/index';
 import {
-    ArticlesService,
-    CommentsService,
-    UserService
-} from '@app/core/services';
+    FavoriteButtonComponent,
+    FollowButtonComponent,
+    ListErrorsComponent
+} from '@app/shared/components';
+import { MarkdownPipe } from './pipes';
+import { ArticleCommentComponent } from './components';
+import { ShowAuthedDirective } from '@app/common/directives/show-authed.directive';
+import { ArticlesService, CommentsService, UserService } from '@app/core/services';
 
-import {
-    Article,
-    Comment,
-    Errors,
-    User,
-} from '@app/shared/models';
 
 @Component({
     selector: 'app-article-page',
-    templateUrl: './article.component.html'
+    templateUrl: './article.component.html',
+    imports: [
+        ArticleMetaComponent,
+        RouterLink,
+        NgClass,
+        FollowButtonComponent,
+        FavoriteButtonComponent,
+        NgForOf,
+        MarkdownPipe,
+        AsyncPipe,
+        ListErrorsComponent,
+        FormsModule,
+        ArticleCommentComponent,
+        ReactiveFormsModule,
+        ShowAuthedDirective,
+        NgIf
+    ],
+    standalone: true
 })
-export class ArticleComponent implements OnInit {
-    article: Article;
-    currentUser: User;
-    canModify: boolean;
-    comments: Comment[];
-    commentControl = new UntypedFormControl();
-    commentFormErrors = new Errors();
+export class ArticleComponent implements OnInit, OnDestroy {
+    article: Article = new Article();
+    currentUser!: User | null;
+    comments: Comment[] = [];
+    canModify: boolean = false;
+
+    commentControl = new FormControl<string>('', { nonNullable: true });
+    commentFormErrors: Errors | null = null;
+
     isSubmitting = false;
     isDeleting = false;
+    destroy$ = new Subject<void>();
+
 
     constructor(
-        private route: ActivatedRoute,
-        private articlesService: ArticlesService,
-        private commentsService: CommentsService,
-        private router: Router,
-        private userService: UserService
-    ) { }
+        private readonly route: ActivatedRoute,
+        private readonly articleService: ArticlesService,
+        private readonly commentsService: CommentsService,
+        private readonly router: Router,
+        private readonly userService: UserService
+    ) {
+    }
 
-    ngOnInit() {
-        // Retreive the prefetched article
-        this.route.data.subscribe((data: { article: Article }) => {
-            this.article = data.article;
-
-            // Load the comments on this article
-            this.populateComments();
-        });
-
-        // Load the current user's data
-        this.userService.currentUser.subscribe((userData: User) => {
-            this.currentUser = userData;
-
-            this.canModify =
-                this.currentUser.username === this.article.author.username;
+    ngOnInit(): void {
+        this.route.params.pipe(
+            switchMap(({ slug }) => this.articleService.get(slug as string)),
+            switchMap(article => combineLatest([
+                of(article),
+                this.commentsService.getAll(article.slug),
+                this.userService.currentUser
+            ])
+            ),
+            catchError((err) => {
+                this.router.navigateByUrl('/');
+                return throwError(err);
+            })
+        ).subscribe(([article, comments, currentUser]) => {
+            this.article = article;
+            this.comments = comments;
+            this.currentUser = currentUser;
+            this.canModify = currentUser?.username === article.author.username;
         });
     }
 
-    onToggleFavorite(favorited: boolean) {
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
+    onToggleFavorite(favorited: boolean): void {
         this.article.favorited = favorited;
 
         if (favorited) {
@@ -65,47 +98,50 @@ export class ArticleComponent implements OnInit {
         }
     }
 
-    onToggleFollowing(following: boolean) {
-        this.article.author.following = following;
+    toggleFollowing(profile: Profile): void {
+        this.article.author.following = profile.following;
     }
 
-    deleteArticle() {
+    deleteArticle(): void {
         this.isDeleting = true;
 
-        this.articlesService.destroy(this.article.slug).subscribe(success => {
-            this.router.navigateByUrl('/');
-        });
-    }
-
-    populateComments() {
-        this.commentsService
-            .getAll(this.article.slug)
-            .subscribe(comments => (this.comments = comments));
+        this.articleService.delete(this.article.slug)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
+                void this.router.navigateByUrl('/');
+            });
     }
 
     addComment() {
         this.isSubmitting = true;
-        this.commentFormErrors = new Errors();
+        this.commentFormErrors = null;
 
-        const commentBody = this.commentControl.value;
-        this.commentsService.add(this.article.slug, commentBody).subscribe(
-            comment => {
-                this.comments.unshift(comment);
-                this.commentControl.reset('');
-                this.isSubmitting = false;
-            },
-            errors => {
-                this.isSubmitting = false;
-                this.commentFormErrors = errors;
+        this.commentsService.add(this.article.slug, this.commentControl.value)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: comment => {
+                    this.comments.unshift(comment);
+                    this.commentControl.reset('');
+                    this.isSubmitting = false;
+                },
+                error: errors => {
+                    this.isSubmitting = false;
+                    this.commentFormErrors = errors;
+                }
             }
-        );
+            );
     }
 
-    onDeleteComment(comment) {
+    deleteComment(comment: Comment): void {
         this.commentsService
-            .destroy(comment.id, this.article.slug)
-            .subscribe(success => {
+            .delete(comment.id, this.article.slug)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(() => {
                 this.comments = this.comments.filter(item => item !== comment);
             });
+    }
+
+    trackById(index: number, item: Comment): string {
+        return item.id;
     }
 }
