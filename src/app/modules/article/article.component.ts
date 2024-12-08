@@ -17,27 +17,42 @@ import { ArticleCommentComponent } from './components';
 import { ShowAuthedDirective } from '@app/common/directives/show-authed.directive';
 import { ArticlesService, CommentsService, UserService } from '@app/core/services';
 
+const BASE_MODULES = [
+    FormsModule,
+    ReactiveFormsModule,
+    RouterLink,
+    NgClass,
+    NgForOf,
+    NgIf,
+];
+//
+const PIPES = [
+    MarkdownPipe,
+    AsyncPipe,
+];
+
+const DIRECTIVES = [
+    ShowAuthedDirective,
+];
+
+const COMPONENTS = [
+    ArticleMetaComponent,
+    FollowButtonComponent,
+    FavoriteButtonComponent,
+    ListErrorsComponent,
+    ArticleCommentComponent,
+];
 
 @Component({
     selector: 'app-article-page',
     templateUrl: './article.component.html',
+    standalone: true,
     imports: [
-        ArticleMetaComponent,
-        RouterLink,
-        NgClass,
-        FollowButtonComponent,
-        FavoriteButtonComponent,
-        NgForOf,
-        MarkdownPipe,
-        AsyncPipe,
-        ListErrorsComponent,
-        FormsModule,
-        ArticleCommentComponent,
-        ReactiveFormsModule,
-        ShowAuthedDirective,
-        NgIf
+        BASE_MODULES,
+        PIPES,
+        DIRECTIVES,
+        COMPONENTS,
     ],
-    standalone: true
 })
 export class ArticleComponent implements OnInit, OnDestroy {
     article: Article = new Article();
