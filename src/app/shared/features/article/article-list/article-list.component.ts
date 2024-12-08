@@ -10,7 +10,7 @@ import { ArticlePreviewComponent } from '../article-preview/article-preview.comp
 
 @Component({
     selector: 'app-article-list',
-    styleUrls: ['article-list.component.css'],
+    styleUrls: ['article-list.component.scss'],
     templateUrl: './article-list.component.html',
     standalone: true,
     imports: [

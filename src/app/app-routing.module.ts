@@ -7,14 +7,12 @@ import { ArticleRoutes } from './modules/article/article.routing';
 import { EditorRoutes } from './modules/editor/editor.routing';
 import { HomeRoutes } from './modules/home/home.routing';
 import { ProfileRoutes } from './modules/profile/profile.routing';
+import { SettingsRoutes } from './modules/settings/settings.routing';
 
 const routes: Routes = [
     ...HomeRoutes,
     ...AuthRoutes,
-    {
-        path: 'settings',
-        loadChildren: () => import('./modules/settings/settings.module').then(m => m.SettingsModule)
-    },
+    ...SettingsRoutes,
     ...ProfileRoutes,
     ...EditorRoutes,
     ...ArticleRoutes,
