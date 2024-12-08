@@ -1,8 +1,9 @@
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AsyncPipe, NgClass, NgForOf } from '@angular/common';
+import { NgClass, NgForOf } from '@angular/common';
 import { takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { LetDirective } from '@rx-angular/template/let';
 //
 import { ArticleListComponent } from '@app/shared/features/index';
 import { ShowAuthedDirective } from '@app/common/directives/show-authed.directive';
@@ -17,7 +18,8 @@ import { TagsService, UserService } from '@app/core/services';
         NgClass,
         ArticleListComponent,
         NgForOf,
-        ShowAuthedDirective
+        ShowAuthedDirective,
+        LetDirective
     ],
     standalone: true
 })
