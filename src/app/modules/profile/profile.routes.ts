@@ -5,21 +5,16 @@ import { ProfileArticlesComponent, ProfileFavoritesComponent } from './component
 
 export const PROFILE_ROUTES: Routes = [
     {
-        path: 'profile',
+        path: ':username',
+        component: ProfileComponent,
         children: [
             {
-                path: ':username',
-                component: ProfileComponent,
-                children: [
-                    {
-                        path: '',
-                        component: ProfileArticlesComponent
-                    },
-                    {
-                        path: 'favorites',
-                        component: ProfileFavoritesComponent
-                    }
-                ]
+                path: '',
+                component: ProfileArticlesComponent
+            },
+            {
+                path: 'favorites',
+                component: ProfileFavoritesComponent
             }
         ]
     }
