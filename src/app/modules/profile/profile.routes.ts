@@ -3,8 +3,7 @@ import { Routes } from '@angular/router';
 import { ProfileComponent } from './profile.component';
 import { ProfileArticlesComponent, ProfileFavoritesComponent } from './components';
 
-
-const routes: Routes = [
+export const PROFILE_ROUTES: Routes = [
     {
         path: 'profile',
         children: [
@@ -25,7 +24,3 @@ const routes: Routes = [
         ]
     }
 ];
-
-export {
-    routes as ProfileRoutes,
-};

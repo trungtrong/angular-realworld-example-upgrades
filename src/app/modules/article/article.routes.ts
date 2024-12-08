@@ -1,12 +1,8 @@
 import { Routes } from '@angular/router';
 
-const routes: Routes = [
+export const ARTICLE_ROUTES: Routes = [
     {
         path: 'article/:slug',
         loadComponent: () => import('./article.component').then(m => m.ArticleComponent)
     }
 ];
-
-export {
-    routes as ArticleRoutes,
-};

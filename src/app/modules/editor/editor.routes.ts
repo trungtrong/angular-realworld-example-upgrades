@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from '@app/core/guards';
 
-const routes: Routes = [
+export const EDITOR_ROUTES: Routes = [
     {
         path: 'editor',
         children: [
@@ -18,7 +18,3 @@ const routes: Routes = [
         ]
     }
 ];
-
-export {
-    routes as EditorRoutes,
-};
