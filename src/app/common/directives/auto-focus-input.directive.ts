@@ -1,7 +1,8 @@
-import { Directive, ElementRef, Input } from "@angular/core";
+import { Directive, ElementRef, Input } from '@angular/core';
 
 @Directive({
-    selector: '[appAutoFocus]'
+    selector: '[appAutoFocus]',
+    standalone: true
 })
 export class AutoFocusDirective {
     @Input() enable = true;
@@ -19,6 +20,6 @@ export class AutoFocusDirective {
             }
             //
             inputs[0].focus();
-        }, this.timeout)
+        }, this.timeout);
     }
 }

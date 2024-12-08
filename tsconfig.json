@@ -104,6 +104,12 @@
             "@app/common/*": [
                 "app/common/*.ts"
             ],
+            "@app/common/directives/*": [
+                "app/common/directives/*.ts"
+            ],
+            "@app/common/pipes/*": [
+                "app/common/pipes/*.ts"
+            ],
         }
     },
     "angularCompilerOptions": {

@@ -1,11 +1,15 @@
-import { APP_INITIALIZER, Injector, NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { APP_INITIALIZER, importProvidersFrom, Injector } from '@angular/core';
+import { PreloadAllModules, provideRouter, withPreloading } from '@angular/router';
+import { HTTP_INTERCEPTORS, HttpClientModule, } from '@angular/common/http';
+import { ApplicationConfig } from '@angular/platform-browser';
 //
-import { HttpTokenInterceptor } from './interceptors/http-token.interceptor';
-import { ErrorInterceptor, TokenInterceptor } from './interceptors';
-import { AppInitializeService } from './services';
+import {
+    ErrorInterceptor,
+    TokenInterceptor,
+    HttpTokenInterceptor
+} from '@app/core/interceptors';
+import { AppInitializeService } from './core';
+import { APP_ROUTES } from './app.routes';
 
 const initializeAppFactory = (injector: Injector) => {
     // because DI framework is set up after bootstrap app - APP initialize
@@ -14,19 +18,18 @@ const initializeAppFactory = (injector: Injector) => {
 };
 
 const BASE_MODULES = [
-    CommonModule,
-    RouterModule,
     HttpClientModule
 ];
 
-@NgModule({
-    imports: [
-        BASE_MODULES,
-    ],
-    exports: [
-        BASE_MODULES,
-    ],
+export const appConfig: ApplicationConfig = {
     providers: [
+        importProvidersFrom(
+            BASE_MODULES
+        ),
+        provideRouter(
+            APP_ROUTES,
+            withPreloading(PreloadAllModules)
+        ),
         {
             provide: APP_INITIALIZER,
             useFactory: initializeAppFactory,
@@ -40,6 +43,5 @@ const BASE_MODULES = [
         },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-    ]
-})
-export class CoreModule { }
+    ],
+};

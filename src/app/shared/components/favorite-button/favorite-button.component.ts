@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { concatMap, tap } from 'rxjs/operators';
@@ -6,10 +7,13 @@ import { concatMap, tap } from 'rxjs/operators';
 import { ArticlesService, UserService } from '@app/core/services';
 import { Article } from '../../models';
 
-
 @Component({
     selector: 'app-favorite-button',
-    templateUrl: './favorite-button.component.html'
+    templateUrl: './favorite-button.component.html',
+    imports: [
+        NgClass
+    ],
+    standalone: true
 })
 export class FavoriteButtonComponent {
     constructor(

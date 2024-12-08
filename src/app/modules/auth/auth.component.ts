@@ -1,65 +1,96 @@
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+    Validators,
+    FormGroup,
+    FormControl,
+    ReactiveFormsModule
+} from '@angular/forms';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { NgIf } from '@angular/common';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 //
-import { UserService } from '@app/core/services';
+import { ListErrorsComponent } from '@app/shared/components';
 import { Errors } from '@app/shared/models';
+import { UserService } from '@app/core/services';
+
+interface AuthForm {
+    email: FormControl<string>;
+    password: FormControl<string>;
+    username?: FormControl<string>;
+}
 
 @Component({
     selector: 'app-auth-page',
-    templateUrl: './auth.component.html'
+    templateUrl: './auth.component.html',
+    standalone: true,
+    imports: [
+        RouterLink,
+        NgIf,
+        ListErrorsComponent,
+        ReactiveFormsModule
+    ]
 })
-export class AuthComponent implements OnInit {
-    authType: string = '';
-    title: string = '';
-    errors: Errors = { errors: {} };
+export class AuthComponent implements OnInit, OnDestroy {
+    authType = '';
+    title = '';
+    errors: Errors = new Errors({ errors: {} });
     isSubmitting = false;
-    authForm: UntypedFormGroup;
+    authForm: FormGroup<AuthForm>;
+    destroy$ = new Subject<void>();
 
     constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        private userService: UserService,
-        private fb: UntypedFormBuilder
+        private readonly route: ActivatedRoute,
+        private readonly router: Router,
+        private readonly userService: UserService,
     ) {
         // use FormBuilder to create a form group
-        this.authForm = this.fb.group({
-            email: ['', Validators.required],
-            password: ['', Validators.required]
+        this.authForm = new FormGroup<AuthForm>({
+            email: new FormControl('', {
+                validators: [Validators.required],
+                nonNullable: true
+            }),
+            password: new FormControl('', {
+                validators: [Validators.required],
+                nonNullable: true
+            })
         });
     }
 
-    ngOnInit() {
-        // you would normally unsubscribe from this observable subscription
-        // the active route observables are exemptions from unsubribe always rule
-        // see notes on: https://angular.io/guide/router#observable-parammap-and-component-reuse
-        this.route.url.subscribe(data => {
-            // Get the last piece of the URL (it's either 'login' or 'register')
+    ngOnInit(): void {
+        this.route.url.pipe(
+            takeUntil(this.destroy$)
+        ).subscribe(data => {
             this.authType = data[data.length - 1].path;
-            // Set a title for the page accordingly
             this.title = (this.authType === 'login') ? 'Sign in' : 'Sign up';
-            // add form control for username if this is the register page
             if (this.authType === 'register') {
-                this.authForm.addControl('username', new UntypedFormControl());
+                this.authForm.addControl('username', new FormControl('', { nonNullable: true }));
             }
         });
     }
 
-    submitForm() {
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
+    submitForm(): void {
         this.isSubmitting = true;
         this.errors = { errors: {} };
 
-        const credentials = this.authForm.value;
-        this.userService
-            .attemptAuth(this.authType, credentials)
-            .subscribe(
-                (data) => {
-                    this.router.navigateByUrl('/').then();
-                },
-                err => {
-                    this.errors = err;
-                    this.isSubmitting = false;
-                }
-            );
+        const observable = (this.authType === 'login')
+            ? this.userService.login(this.authForm.value as { email: string; password: string })
+            : this.userService.register(this.authForm.value as { email: string; password: string; username: string });
+
+        observable.pipe(
+            takeUntil(this.destroy$)
+        ).subscribe({
+            next: () => void this.router.navigateByUrl('/'),
+            error: err => {
+                this.errors = err;
+                this.isSubmitting = false;
+            }
+        }
+        );
     }
 }
