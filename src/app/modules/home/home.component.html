@@ -38,10 +38,12 @@
                 </div>
 
                 <app-article-list [limit]="10"
-                                  [config]="listConfig"></app-article-list>
+                                  [config]="listConfig">
+                </app-article-list>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-3"
+                 *rxLet="tags$; let tags">
                 <div class="sidebar">
                     <p>Popular Tags</p>
 

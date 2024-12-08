@@ -1,73 +1,81 @@
-import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 //
-import { UserService } from '@app/core/services';
+import { ListErrorsComponent } from '@app/shared/components/index';
 import { Errors, User } from '@app/shared/models';
+import { UserService } from '@app/core/services';
 
+interface SettingsForm {
+    image: FormControl<string>;
+    username: FormControl<string>;
+    bio: FormControl<string>;
+    email: FormControl<string>;
+    password: FormControl<string>;
+}
 
 @Component({
     selector: 'app-settings-page',
-    templateUrl: './settings.component.html'
+    templateUrl: './settings.component.html',
+    imports: [
+        ListErrorsComponent,
+        ReactiveFormsModule
+    ],
+    standalone: true
 })
-export class SettingsComponent implements OnInit {
-    user = new User();
-    settingsForm = new UntypedFormGroup({
-        value: new UntypedFormControl(''),
+export class SettingsComponent implements OnInit, OnDestroy {
+    user!: User;
+    settingsForm = new FormGroup<SettingsForm>({
+        image: new FormControl('', { nonNullable: true }),
+        username: new FormControl('', { nonNullable: true }),
+        bio: new FormControl('', { nonNullable: true }),
+        email: new FormControl('', { nonNullable: true }),
+        password: new FormControl('', {
+            validators: [Validators.required],
+            nonNullable: true
+        }),
     });
-    errors: Errors = new Errors();
+    errors: Errors | null = null;
     isSubmitting = false;
+    destroy$ = new Subject<void>();
 
     constructor(
-        private router: Router,
-        private userService: UserService,
-        private fb: UntypedFormBuilder
+        private readonly router: Router,
+        private readonly userService: UserService,
     ) {
-        // create form group using the form builder
-        this.settingsForm = this.fb.group({
-            image: '',
-            username: '',
-            bio: '',
-            email: '',
-            password: ['', Validators.required]
-        });
-        // Optional: subscribe to changes on the form
-        // this.settingsForm.valueChanges.subscribe(values => this.updateUser(values));
     }
 
-    ngOnInit() {
-        // Make a fresh copy of the current user's object to place in editable form fields
-        Object.assign(this.user, this.userService.getCurrentUser());
-        // Fill the form
-        this.settingsForm.patchValue(this.user);
+    ngOnInit(): void {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        this.settingsForm.patchValue(this.userService.getCurrentUser());
     }
 
-    logout() {
-        this.userService.purgeAuth();
-        this.router.navigateByUrl('/');
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
+    logout(): void {
+        this.userService.logout();
     }
 
     submitForm() {
         this.isSubmitting = true;
 
-        // update the model
-        this.updateUser(this.settingsForm.value as User);
-
         this.userService
-            .update(this.user)
-            .subscribe(
-                (updatedUser) => {
-                    this.router.navigateByUrl('/profile/' + updatedUser.username).then();
-                },
-                err => {
+            .update(this.settingsForm.value)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: ({ user }) => void this.router.navigateByUrl('/profile/' + user.username),
+                error: (err) => {
                     this.errors = err;
                     this.isSubmitting = false;
                 }
+            }
             );
-    }
-
-    updateUser(values: User) {
-        Object.assign(this.user, values);
     }
 
 }

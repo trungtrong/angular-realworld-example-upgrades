@@ -1,25 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import {RouterLink, RouterLinkActive} from '@angular/router';
+import {AsyncPipe, NgIf} from '@angular/common';
 //
 import { UserService } from '@app/core/services';
 import { User } from '@app/shared/models';
-
+import { ShowAuthedDirective } from '@app/common/directives/show-authed.directive';
 
 @Component({
     selector: 'app-layout-header',
-    templateUrl: './header.component.html'
+    templateUrl: './header.component.html',
+    standalone: true,
+    imports: [
+        RouterLinkActive,
+        RouterLink,
+        AsyncPipe,
+        NgIf,
+        ShowAuthedDirective
+    ],
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent {
+    currentUser$ = inject(UserService).currentUser;
+
     constructor(
         private userService: UserService
     ) { }
-
-    currentUser: User;
-
-    ngOnInit() {
-        this.userService.currentUser.subscribe(
-            (userData) => {
-                this.currentUser = userData;
-            }
-        );
-    }
 }

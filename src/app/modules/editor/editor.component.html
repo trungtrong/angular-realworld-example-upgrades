@@ -27,7 +27,7 @@
                                       formControlName="body"
                                       rows="8"
                                       placeholder="Write your article (in markdown)">
-              </textarea>
+                </textarea>
                         </fieldset>
 
                         <fieldset class="form-group">
@@ -37,7 +37,7 @@
                                    [formControl]="tagField"
                                    (keyup.enter)="addTag()" />
                             <div class="tag-list">
-                                <span *ngFor="let tag of article.tagList"
+                                <span *ngFor="let tag of tagList"
                                       class="tag-default tag-pill">
                                     <i class="ion-close-round"
                                        (click)="removeTag(tag)"></i>

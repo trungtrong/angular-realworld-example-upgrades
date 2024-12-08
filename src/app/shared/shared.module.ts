@@ -3,17 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import {
-    ArticleListComponent,
-    ArticleMetaComponent,
-    ArticlePreviewComponent
-} from './features';
-import {
-    ListErrorsComponent,
-    FavoriteButtonComponent,
-    FollowButtonComponent,
-} from './components';
-import { AppCommonModule } from '@app/common/common.module';
 
 const BASE_MODULES = [
     CommonModule,
@@ -22,32 +11,14 @@ const BASE_MODULES = [
     RouterModule
 ];
 
-const FEATURES = [
-    ArticleListComponent,
-    ArticleMetaComponent,
-    ArticlePreviewComponent,
-];
-
-const COMPONENT = [
-    ListErrorsComponent,
-    FavoriteButtonComponent,
-    FollowButtonComponent,
-];
-
 @NgModule({
     declarations: [
-        FEATURES,
-        COMPONENT,
     ],
     imports: [
         BASE_MODULES,
-        AppCommonModule,
     ],
     exports: [
-        BASE_MODULES,
-        //
-        FEATURES,
-        COMPONENT,
+        BASE_MODULES
     ]
 })
 export class SharedModule { }

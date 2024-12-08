@@ -7,3 +7,4 @@
 
 - What I do:
    + Refactor this project based on Best Practice Structure
+   + Refactor all components, directives, pipes, modules, routes, main.ts by using Standalone

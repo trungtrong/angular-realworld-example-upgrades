@@ -1,42 +1,27 @@
-import { Component, EventEmitter, Input, Output, OnInit, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 //
 import { UserService } from '@app/core/services';
 import { Comment, User } from '@app/shared/models';
 
-import { Subscription } from 'rxjs';
-
 @Component({
     selector: 'app-article-comment',
-    templateUrl: './article-comment.component.html'
+    templateUrl: './article-comment.component.html',
+    imports: [
+        RouterLink,
+        DatePipe,
+        NgIf,
+        AsyncPipe
+    ],
+    standalone: true
 })
-export class ArticleCommentComponent implements OnInit, OnDestroy {
-    constructor(
-        private userService: UserService
-    ) { }
+export class ArticleCommentComponent {
+    @Input() comment!: Comment;
+    @Output() delete = new EventEmitter<boolean>();
 
-    private subscription: Subscription;
-
-    @Input() comment: Comment;
-    @Output() deleteComment = new EventEmitter<boolean>();
-
-    canModify: boolean;
-
-    ngOnInit() {
-        // Load the current user's data
-        this.subscription = this.userService.currentUser.subscribe(
-            (userData: User) => {
-                this.canModify = (userData.username === this.comment?.author?.username);
-            }
-        );
-    }
-
-    ngOnDestroy() {
-        this.subscription.unsubscribe();
-    }
-
-    deleteClicked() {
-        this.deleteComment.emit(true);
-    }
-
-
+    canModify$ = inject(UserService).currentUser.pipe(
+        map((userData: User | null) => userData?.username === this.comment.author.username)
+    );
 }

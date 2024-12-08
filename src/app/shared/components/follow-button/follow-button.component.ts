@@ -1,60 +1,64 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Router } from '@angular/router';
-import { concatMap, tap } from 'rxjs/operators';
-import { of } from 'rxjs';
-
-import { ProfilesService, UserService } from '@app/core/services';
+import { switchMap, takeUntil } from 'rxjs/operators';
+import { EMPTY, Subject } from 'rxjs';
+import { NgClass } from '@angular/common';
 import { Profile } from '../../models';
+import { ProfilesService, UserService } from '@app/core/services';
+//
 
 @Component({
     selector: 'app-follow-button',
-    templateUrl: './follow-button.component.html'
+    templateUrl: './follow-button.component.html',
+    imports: [
+        NgClass
+    ],
+    standalone: true
 })
-export class FollowButtonComponent {
-    constructor(
-        private profilesService: ProfilesService,
-        private router: Router,
-        private userService: UserService
-    ) { }
-
-    @Input() profile: Profile;
-    @Output() toggle = new EventEmitter<boolean>();
+export class FollowButtonComponent implements OnDestroy {
+    @Input() profile!: Profile;
+    @Output() toggle = new EventEmitter<Profile>();
     isSubmitting = false;
+    destroy$ = new Subject<void>();
 
-    toggleFollowing() {
+    constructor(
+        private readonly router: Router,
+        private readonly profileService: ProfilesService,
+        private readonly userService: UserService
+    ) {
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
+    toggleFollowing(): void {
         this.isSubmitting = true;
 
-        this.userService.isAuthenticated.pipe(concatMap(
-            (authenticated) => {
-                // Not authenticated? Push to login screen
-                if (!authenticated) {
-                    this.router.navigateByUrl('/login');
-                    return of(null);
+        this.userService.isAuthenticated.pipe(
+            switchMap((isAuthenticated: boolean) => {
+                if (!isAuthenticated) {
+                    void this.router.navigateByUrl('/login');
+                    return EMPTY;
                 }
 
-                // Follow this profile if we aren't already
                 if (!this.profile.following) {
-                    return this.profilesService.follow(this.profile.username)
-                        .pipe(tap(
-                            data => {
-                                this.isSubmitting = false;
-                                this.toggle.emit(true);
-                            },
-                            err => this.isSubmitting = false
-                        ));
-
-                    // Otherwise, unfollow this profile
+                    return this.profileService.follow(this.profile.username);
                 } else {
-                    return this.profilesService.unfollow(this.profile.username)
-                        .pipe(tap(
-                            data => {
-                                this.isSubmitting = false;
-                                this.toggle.emit(false);
-                            },
-                            err => this.isSubmitting = false
-                        ));
+                    return this.profileService.unfollow(this.profile.username);
                 }
             }
-        )).subscribe();
+            ),
+            takeUntil(this.destroy$)
+        ).subscribe(
+            {
+                next: (profile) => {
+                    this.isSubmitting = false;
+                    this.toggle.emit(profile);
+                },
+                error: () => this.isSubmitting = false
+            }
+        );
     }
 }
