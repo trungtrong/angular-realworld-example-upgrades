@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule, PreloadAllModules } from '@angular/router';
 //
 import { PageNotFoundComponent } from './core/pages';
-import { AuthRoutes } from './modules/auth/auth.routing';
-import { ArticleRoutes } from './modules/article/article.routing';
-import { EditorRoutes } from './modules/editor/editor.routing';
-import { HomeRoutes } from './modules/home/home.routing';
-import { ProfileRoutes } from './modules/profile/profile.routing';
-import { SettingsRoutes } from './modules/settings/settings.routing';
+//
+import { AuthRoutes } from './modules/auth/auth.routes';
+import { ArticleRoutes } from './modules/article/article.routes';
+import { EditorRoutes } from './modules/editor/editor.routes';
+import { HomeRoutes } from './modules/home/home.routes';
+import { ProfileRoutes } from './modules/profile/profile.routes';
+import { SettingsRoutes } from './modules/settings/settings.routes';
 
 const routes: Routes = [
     ...HomeRoutes,
