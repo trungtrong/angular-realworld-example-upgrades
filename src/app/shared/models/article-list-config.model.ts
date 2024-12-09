@@ -1,4 +1,4 @@
-export interface ArticleListConfig {
+export class ArticleListConfig {
     type: string;
 
     filters: {
@@ -8,4 +8,8 @@ export interface ArticleListConfig {
         limit?: number;
         offset?: number;
     };
+
+    constructor(init?: Partial<ArticleListConfig>) {
+        Object.assign(this, init);
+    }
 }
