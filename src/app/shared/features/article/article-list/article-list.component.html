@@ -2,17 +2,20 @@
                      [article]="article">
 </app-article-preview>
 
-<div class="article-preview"
-     *ngIf="loading === LoadingState.LOADING">
+@if (loading === LoadingState.LOADING) {
+<div class="article-preview">
     Loading articles...
 </div>
+}
 
-<div class="article-preview"
-     *ngIf="loading === LoadingState.LOADED  && !results.length">
+@if (loading === LoadingState.LOADED && !results.length) {
+<div class="article-preview">
     No articles are here... yet.
 </div>
+}
 
-<nav *ngIf="loading === LoadingState.LOADED && totalPages.length > 1">
+@if (loading === LoadingState.LOADED && totalPages.length > 1) {
+<nav>
     <ul class="pagination">
 
         <li class="page-item"
@@ -24,3 +27,4 @@
 
     </ul>
 </nav>
+}

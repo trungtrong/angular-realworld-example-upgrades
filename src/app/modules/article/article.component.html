@@ -1,13 +1,13 @@
-<div class="article-page"
-     *ngIf="article">
+@if (article) {
+<div class="article-page">
 
     <div class="banner">
         <div class="container">
             <h1>{{ article.title }}</h1>
 
             <app-article-meta [article]="article">
-
-                <span *ngIf="canModify">
+                @if (canModify) {
+                <span>
                     <a class="btn btn-sm btn-outline-secondary"
                        [routerLink]="['/editor', article.slug]">
                         <i class="ion-edit"></i> Edit Article
@@ -19,8 +19,8 @@
                         <i class="ion-trash-a"></i> Delete Article
                     </button>
                 </span>
-
-                <span *ngIf="!canModify">
+                } @else {
+                <span>
                     <app-follow-button [profile]="article.author"
                                        (toggle)="toggleFollowing($event)">
                     </app-follow-button>
@@ -31,7 +31,7 @@
                         <span class="counter">({{ article.favoritesCount }})</span>
                     </app-favorite-button>
                 </span>
-
+                }
             </app-article-meta>
         </div>
     </div>
@@ -58,7 +58,8 @@
         <div class="article-actions">
             <app-article-meta [article]="article">
 
-                <span *ngIf="canModify">
+                @if (canModify) {
+                <span>
                     <a class="btn btn-sm btn-outline-secondary"
                        [routerLink]="['/editor', article.slug]">
                         <i class="ion-edit"></i> Edit Article
@@ -70,8 +71,8 @@
                         <i class="ion-trash-a"></i> Delete Article
                     </button>
                 </span>
-
-                <span *ngIf="!canModify">
+                } @else {
+                <span>
                     <app-follow-button [profile]="article.author"
                                        (toggle)="toggleFollowing($event)">
                     </app-follow-button>
@@ -82,7 +83,7 @@
                         <span class="counter">({{ article.favoritesCount }})</span>
                     </app-favorite-button>
                 </span>
-
+                }
             </app-article-meta>
         </div>
 
@@ -127,3 +128,4 @@
 
     </div>
 </div>
+}
