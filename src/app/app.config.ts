@@ -1,7 +1,6 @@
-import { APP_INITIALIZER, importProvidersFrom, Injector } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, Injector } from '@angular/core';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { PreloadAllModules, provideRouter, withPreloading } from '@angular/router';
-import { HTTP_INTERCEPTORS, HttpClientModule, } from '@angular/common/http';
-import { ApplicationConfig } from '@angular/platform-browser';
 //
 import {
     ErrorInterceptor,
@@ -11,17 +10,15 @@ import { AppInitializeService } from './core/services';
 import { APP_ROUTES } from './app.routes';
 
 const initializeAppFactory = (injector: Injector) => {
-    // because DI framework is set up after bootstrap app - APP initialize
     const _appInitService = injector.get(AppInitializeService);
     return (): Promise<boolean> => _appInitService.initApp();
 };
 
-const BASE_MODULES = [
-    HttpClientModule
-];
+const BASE_MODULES = [];
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        provideHttpClient(),
         importProvidersFrom(
             BASE_MODULES
         ),
