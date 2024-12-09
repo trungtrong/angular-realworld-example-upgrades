@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, Injector } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, Injector, inject, provideAppInitializer } from '@angular/core';
 import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { PreloadAllModules, provideRouter, withPreloading } from '@angular/router';
 //
@@ -26,12 +26,10 @@ export const appConfig: ApplicationConfig = {
             APP_ROUTES,
             withPreloading(PreloadAllModules)
         ),
-        {
-            provide: APP_INITIALIZER,
-            useFactory: initializeAppFactory,
-            deps: [Injector],
-            multi: true
-        },
+        provideAppInitializer(() => {
+            const initializerFn = (initializeAppFactory)(inject(Injector));
+            return initializerFn();
+        }),
         {
             provide: HTTP_INTERCEPTORS,
             useFactory: HttpTokenInterceptor,

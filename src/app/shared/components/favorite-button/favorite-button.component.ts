@@ -12,8 +12,7 @@ import { Article } from '@app/modules/article/models';
     templateUrl: './favorite-button.component.html',
     imports: [
         NgClass
-    ],
-    standalone: true
+    ]
 })
 export class FavoriteButtonComponent {
     constructor(

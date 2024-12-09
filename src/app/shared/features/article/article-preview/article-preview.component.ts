@@ -14,8 +14,7 @@ import { Article } from '@app/modules/article/models';
         FavoriteButtonComponent,
         RouterLink,
         NgForOf
-    ],
-    standalone: true
+    ]
 })
 export class ArticlePreviewComponent {
     @Input() article!: Article;

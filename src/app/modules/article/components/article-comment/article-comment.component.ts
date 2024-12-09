@@ -15,8 +15,7 @@ import { Comment } from '../../models';
         DatePipe,
         NgIf,
         AsyncPipe
-    ],
-    standalone: true
+    ]
 })
 export class ArticleCommentComponent {
     @Input() comment!: Comment;

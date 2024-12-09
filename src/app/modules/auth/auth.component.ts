@@ -24,7 +24,6 @@ interface AuthForm {
 @Component({
     selector: 'app-auth-page',
     templateUrl: './auth.component.html',
-    standalone: true,
     imports: [
         RouterLink,
         NgIf,
