@@ -1,13 +1,12 @@
-import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, Input } from '@angular/core';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
-import { Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 //
-import { Article, ArticleListConfig } from '@app/shared/models';
 import { LoadingState } from '@app/shared/enums';
 import { ArticlesService } from '@app/core/services';
 import { ArticlePreviewComponent } from '../article-preview/article-preview.component';
+import { Article, ArticleListConfig } from '@app/modules/article/models';
 
 @Component({
     selector: 'app-article-list',

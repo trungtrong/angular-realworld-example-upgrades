@@ -4,7 +4,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import { catchError, switchMap } from 'rxjs/operators';
 import { of, combineLatest, throwError } from 'rxjs';
-import { Article, Comment, Errors, Profile, User } from '@app/shared/models';
+import { Errors, User } from '@app/shared/models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 //
 import { ArticleMetaComponent } from '@app/shared/features/index';
@@ -17,6 +17,8 @@ import { MarkdownPipe } from './pipes';
 import { ArticleCommentComponent } from './components';
 import { ShowAuthedDirective } from '@app/common/directives/show-authed.directive';
 import { ArticlesService, CommentsService, UserService } from '@app/core/services';
+import { Article, Comment } from './models';
+import { Profile } from '../profile/models';
 
 const BASE_MODULES = [
     FormsModule,

@@ -7,8 +7,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 //
 import { ArticleListComponent } from '@app/shared/features/index';
 import { ShowAuthedDirective } from '@app/common/directives/show-authed.directive';
-import { ArticleListConfig } from '@app/shared/models';
 import { TagsService, UserService } from '@app/core/services';
+import { ArticleListConfig } from '../article/models';
 
 @Component({
     selector: 'app-home-page',

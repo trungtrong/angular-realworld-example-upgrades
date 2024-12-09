@@ -1,4 +1,4 @@
-import { Profile } from './profile.model';
+import { Profile } from '@app/modules/profile/models';
 
 export class Comment {
     id: string;

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
+import { Article } from '@app/modules/article/models';
 //
-import { Article } from '@app/shared/models';
 
 @Component({
     selector: 'app-article-meta',

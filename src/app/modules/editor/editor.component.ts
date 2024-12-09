@@ -7,8 +7,9 @@ import { map } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 //
 import { ListErrorsComponent } from '@app/shared/components';
-import { Article, Errors } from '@app/shared/models';
+import { Errors } from '@app/shared/models';
 import { ArticlesService, UserService } from '@app/core/services';
+import { Article } from '../article/models';
 
 interface ArticleForm {
     title: FormControl<string>;

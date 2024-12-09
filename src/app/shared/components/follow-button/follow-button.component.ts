@@ -5,8 +5,8 @@ import { EMPTY } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 //
 import { NgClass } from '@angular/common';
-import { Profile } from '../../models';
 import { ProfilesService, UserService } from '@app/core/services';
+import { Profile } from '@app/modules/profile/models/profile.model';
 //
 
 @Component({

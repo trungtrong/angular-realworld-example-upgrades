@@ -4,8 +4,9 @@ import { switchMap } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 //
 import { ArticleListComponent } from '@app/shared/features/index';
-import { ArticleListConfig, Profile } from '@app/shared/models';
 import { ProfilesService } from '@app/core/services';
+import { ArticleListConfig } from '@app/modules/article/models';
+import { Profile } from '@app/modules/profile/models/profile.model';
 
 
 @Component({

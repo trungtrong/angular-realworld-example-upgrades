@@ -1,13 +1,13 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 //
 import { ArticleListComponent } from '@app/shared/features/index';
-import { Profile, ArticleListConfig } from '@app/shared/models';
 import { ProfilesService } from '@app/core/services';
+import { ArticleListConfig } from '@app/modules/article/models';
+import { Profile } from '../../models/profile.model';
 
 
 @Component({

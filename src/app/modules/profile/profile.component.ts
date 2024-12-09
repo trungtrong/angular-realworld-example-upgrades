@@ -7,8 +7,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 //
 import { FollowButtonComponent } from '@app/shared/components';
-import { Profile } from '@app/shared/models';
 import { ProfilesService, UserService } from '@app/core/services';
+import { Profile } from './models/profile.model';
 
 @Component({
     selector: 'app-profile-page',

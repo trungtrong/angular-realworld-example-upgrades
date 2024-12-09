@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 //
-import { Profile } from '@app/shared/models/profile.model';
+import { Profile } from '@app/modules/profile/models/profile.model';
 import { ProfilesService } from '@app/core/services';
 
 @Injectable()

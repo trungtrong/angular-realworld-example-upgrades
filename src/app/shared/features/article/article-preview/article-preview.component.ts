@@ -3,8 +3,8 @@ import { RouterLink } from '@angular/router';
 import { NgForOf } from '@angular/common';
 //
 import { ArticleMetaComponent } from '../article-meta/article-meta.component';
-import { Article } from '@app/shared/models';
 import { FavoriteButtonComponent } from '@app/shared/components';
+import { Article } from '@app/modules/article/models';
 
 @Component({
     selector: 'app-article-preview',
