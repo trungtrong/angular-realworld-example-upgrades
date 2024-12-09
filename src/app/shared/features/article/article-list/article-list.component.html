@@ -1,6 +1,7 @@
-<app-article-preview *ngFor="let article of results"
-                     [article]="article">
+@for (article of results; track article) {
+<app-article-preview [article]="article">
 </app-article-preview>
+}
 
 @if (loading === LoadingState.LOADING) {
 <div class="article-preview">
@@ -17,14 +18,13 @@
 @if (loading === LoadingState.LOADED && totalPages.length > 1) {
 <nav>
     <ul class="pagination">
-
+        @for (pageNumber of totalPages; track pageNumber) {
         <li class="page-item"
-            [ngClass]="{'active': pageNumber === currentPage}"
-            *ngFor="let pageNumber of totalPages">
+            [ngClass]="{'active': pageNumber === currentPage}">
             <button class="page-link"
                     (click)="setPageTo(pageNumber)">{{ pageNumber }}</button>
         </li>
-
+        }
     </ul>
 </nav>
 }

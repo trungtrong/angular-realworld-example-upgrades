@@ -44,10 +44,11 @@
                 <div [innerHTML]="article.body | markdown | async"></div>
 
                 <ul class="tag-list">
-                    <li *ngFor="let tag of article.tagList"
-                        class="tag-default tag-pill tag-outline">
+                    @for (tag of article.tagList; track tag) {
+                    <li class="tag-default tag-pill tag-outline">
                         {{ tag }}
                     </li>
+                    }
                 </ul>
 
             </div>
@@ -118,11 +119,12 @@
                     <a [routerLink]="['/register']">sign up</a> to add comments on this article.
                 </div>
 
-                <app-article-comment *ngFor="let comment of comments; trackBy: trackById"
-                                     [comment]="comment"
+
+                @for (comment of comments; track trackById) {
+                <app-article-comment [comment]="comment"
                                      (delete)="deleteComment(comment)">
                 </app-article-comment>
-
+                }
             </div>
         </div>
 
