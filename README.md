@@ -11,4 +11,4 @@
     + Refactor all components, directives, pipes, modules, routes, main.ts by using Standalone
         + [PR #3](https://github.com/trungtrong/angular-realworld-example-upgrades/pull/3)
     + Upgrade to Angular v16.12.2
-        + Use esbuild
+        + Enable Vite and esbuild for Angular CLI
