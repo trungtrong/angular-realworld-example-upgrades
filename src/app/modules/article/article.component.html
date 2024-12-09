@@ -1,13 +1,13 @@
-<div class="article-page"
-     *ngIf="article">
+@if (article) {
+<div class="article-page">
 
     <div class="banner">
         <div class="container">
             <h1>{{ article.title }}</h1>
 
             <app-article-meta [article]="article">
-
-                <span *ngIf="canModify">
+                @if (canModify) {
+                <span>
                     <a class="btn btn-sm btn-outline-secondary"
                        [routerLink]="['/editor', article.slug]">
                         <i class="ion-edit"></i> Edit Article
@@ -19,8 +19,8 @@
                         <i class="ion-trash-a"></i> Delete Article
                     </button>
                 </span>
-
-                <span *ngIf="!canModify">
+                } @else {
+                <span>
                     <app-follow-button [profile]="article.author"
                                        (toggle)="toggleFollowing($event)">
                     </app-follow-button>
@@ -31,7 +31,7 @@
                         <span class="counter">({{ article.favoritesCount }})</span>
                     </app-favorite-button>
                 </span>
-
+                }
             </app-article-meta>
         </div>
     </div>
@@ -44,10 +44,11 @@
                 <div [innerHTML]="article.body | markdown | async"></div>
 
                 <ul class="tag-list">
-                    <li *ngFor="let tag of article.tagList"
-                        class="tag-default tag-pill tag-outline">
+                    @for (tag of article.tagList; track tag) {
+                    <li class="tag-default tag-pill tag-outline">
                         {{ tag }}
                     </li>
+                    }
                 </ul>
 
             </div>
@@ -58,7 +59,8 @@
         <div class="article-actions">
             <app-article-meta [article]="article">
 
-                <span *ngIf="canModify">
+                @if (canModify) {
+                <span>
                     <a class="btn btn-sm btn-outline-secondary"
                        [routerLink]="['/editor', article.slug]">
                         <i class="ion-edit"></i> Edit Article
@@ -70,8 +72,8 @@
                         <i class="ion-trash-a"></i> Delete Article
                     </button>
                 </span>
-
-                <span *ngIf="!canModify">
+                } @else {
+                <span>
                     <app-follow-button [profile]="article.author"
                                        (toggle)="toggleFollowing($event)">
                     </app-follow-button>
@@ -82,7 +84,7 @@
                         <span class="counter">({{ article.favoritesCount }})</span>
                     </app-favorite-button>
                 </span>
-
+                }
             </app-article-meta>
         </div>
 
@@ -117,13 +119,15 @@
                     <a [routerLink]="['/register']">sign up</a> to add comments on this article.
                 </div>
 
-                <app-article-comment *ngFor="let comment of comments; trackBy: trackById"
-                                     [comment]="comment"
+
+                @for (comment of comments; track trackById) {
+                <app-article-comment [comment]="comment"
                                      (delete)="deleteComment(comment)">
                 </app-article-comment>
-
+                }
             </div>
         </div>
 
     </div>
 </div>
+}

@@ -1,12 +1,12 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, DestroyRef, inject, Input } from '@angular/core';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 //
-import { Article, ArticleListConfig } from '@app/shared/models';
 import { LoadingState } from '@app/shared/enums';
 import { ArticlesService } from '@app/core/services';
 import { ArticlePreviewComponent } from '../article-preview/article-preview.component';
+import { Article, ArticleListConfig } from '@app/modules/article/models';
 
 @Component({
     selector: 'app-article-list',
@@ -20,14 +20,14 @@ import { ArticlePreviewComponent } from '../article-preview/article-preview.comp
         NgIf
     ],
 })
-export class ArticleListComponent implements OnDestroy {
+export class ArticleListComponent {
     query!: ArticleListConfig;
     results: Article[] = [];
     currentPage = 1;
     totalPages: Array<number> = [];
     loading = LoadingState.NOT_LOADED;
     LoadingState = LoadingState;
-    destroy$ = new Subject<void>();
+    destroyRef = inject(DestroyRef);
 
     @Input() limit!: number;
     @Input()
@@ -43,10 +43,6 @@ export class ArticleListComponent implements OnDestroy {
         private articlesService: ArticlesService
     ) { }
 
-    ngOnDestroy() {
-        this.destroy$.next();
-        this.destroy$.complete();
-    }
 
     setPageTo(pageNumber: number) {
         this.currentPage = pageNumber;
@@ -64,7 +60,7 @@ export class ArticleListComponent implements OnDestroy {
         }
 
         this.articlesService.query(this.query).pipe(
-            takeUntil(this.destroy$)
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe(data => {
             this.loading = LoadingState.LOADED;
             this.results = data.articles;

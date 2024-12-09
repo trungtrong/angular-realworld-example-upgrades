@@ -5,7 +5,7 @@ import { of } from 'rxjs';
 import { concatMap, tap } from 'rxjs/operators';
 //
 import { ArticlesService, UserService } from '@app/core/services';
-import { Article } from '../../models';
+import { Article } from '@app/modules/article/models';
 
 @Component({
     selector: 'app-favorite-button',

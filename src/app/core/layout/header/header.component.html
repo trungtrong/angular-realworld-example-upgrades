@@ -61,18 +61,19 @@
                 </a>
             </li>
 
-            <li class="nav-item"
-                *ngIf="currentUser$ | async as currentUser">
+            @if (currentUser$ | async; as currentUser) {
+            <li class="nav-item">
                 <a class="nav-link"
                    [routerLink]="['/profile', currentUser.username]"
                    routerLinkActive="active">
+                    @if (!!currentUser.image) {
                     <img [src]="currentUser.image"
-                         *ngIf="currentUser.image"
                          class="user-pic" />
+                    }
                     {{ currentUser.username }}
                 </a>
             </li>
-
+            }
         </ul>
 
     </div>

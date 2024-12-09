@@ -167,7 +167,7 @@
                 ],
                 "@typescript-eslint/type-annotation-spacing": "error",
                 "@typescript-eslint/unified-signatures": "error",
-                "arrow-body-style": "error",
+                "arrow-body-style": "off",
                 "arrow-parens": [
                     "off",
                     "always"

@@ -1,11 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { EMPTY, Observable } from 'rxjs';
 //
 import { JwtService } from './jwt.service';
 import { UserService } from './user.service';
-import { User } from '@app/shared/models';
-
 
 @Injectable({ providedIn: 'root' })
 export class AppInitializeService {
@@ -19,7 +16,7 @@ export class AppInitializeService {
         return this.jwtService.getToken() ? this._getAPIsInitialized() : Promise.resolve(true);
     }
 
-    private _getAPIsInitialized(params?: { navigateToUrl?: string }): Promise<boolean> {
+    private _getAPIsInitialized(): Promise<boolean> {
         return this.userService.getCurrentUser().toPromise()
             .then(() => true)
             .catch(() => Promise.resolve(true));

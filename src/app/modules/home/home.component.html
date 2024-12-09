@@ -48,11 +48,13 @@
                     <p>Popular Tags</p>
 
                     <div class="tag-list">
-                        <a *ngFor="let tag of tags"
-                           (click)="setListTo('all', {tag: tag})"
+
+                        @for (tag of tags; track tag) {
+                        <a (click)="setListTo('all', {tag: tag})"
                            class="tag-default tag-pill">
                             {{ tag }}
                         </a>
+                        }
                     </div>
 
                     <div [hidden]="tagsLoaded">

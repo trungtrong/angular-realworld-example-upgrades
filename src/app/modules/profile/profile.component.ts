@@ -1,12 +1,14 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { catchError, map, switchMap, takeUntil } from 'rxjs/operators';
-import { combineLatest, of, Subject, throwError } from 'rxjs';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { catchError, map, switchMap } from 'rxjs/operators';
+import { combineLatest, of, throwError } from 'rxjs';
+import { NgIf } from '@angular/common';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 //
 import { FollowButtonComponent } from '@app/shared/components';
-import { Profile } from '@app/shared/models';
 import { ProfilesService, UserService } from '@app/core/services';
+import { Profile } from './models/profile.model';
 
 @Component({
     selector: 'app-profile-page',
@@ -20,10 +22,10 @@ import { ProfilesService, UserService } from '@app/core/services';
     ],
     standalone: true
 })
-export class ProfileComponent implements OnInit, OnDestroy {
+export class ProfileComponent implements OnInit {
     profile!: Profile;
     isUser: boolean = false;
-    destroy$ = new Subject<void>();
+    destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly route: ActivatedRoute,
@@ -45,16 +47,11 @@ export class ProfileComponent implements OnInit, OnDestroy {
                 of(profile),
                 this.userService.currentUser
             ])),
-            takeUntil(this.destroy$)
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe(([profile, user]) => {
             this.profile = profile;
             this.isUser = profile.username === user?.username;
         });
-    }
-
-    ngOnDestroy() {
-        this.destroy$.next();
-        this.destroy$.complete();
     }
 
     onToggleFollowing(profile: Profile) {

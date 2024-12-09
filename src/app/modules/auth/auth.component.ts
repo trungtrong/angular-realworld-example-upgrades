@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import {
     Validators,
     FormGroup,
@@ -9,6 +9,7 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 //
 import { ListErrorsComponent } from '@app/shared/components';
 import { Errors } from '@app/shared/models';
@@ -31,13 +32,13 @@ interface AuthForm {
         ReactiveFormsModule
     ]
 })
-export class AuthComponent implements OnInit, OnDestroy {
+export class AuthComponent implements OnInit {
     authType = '';
     title = '';
     errors: Errors = new Errors({ errors: {} });
     isSubmitting = false;
     authForm: FormGroup<AuthForm>;
-    destroy$ = new Subject<void>();
+    destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly route: ActivatedRoute,
@@ -59,7 +60,7 @@ export class AuthComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.route.url.pipe(
-            takeUntil(this.destroy$)
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe(data => {
             this.authType = data[data.length - 1].path;
             this.title = (this.authType === 'login') ? 'Sign in' : 'Sign up';
@@ -67,11 +68,6 @@ export class AuthComponent implements OnInit, OnDestroy {
                 this.authForm.addControl('username', new FormControl('', { nonNullable: true }));
             }
         });
-    }
-
-    ngOnDestroy() {
-        this.destroy$.next();
-        this.destroy$.complete();
     }
 
     submitForm(): void {
@@ -83,7 +79,7 @@ export class AuthComponent implements OnInit, OnDestroy {
             : this.userService.register(this.authForm.value as { email: string; password: string; username: string });
 
         observable.pipe(
-            takeUntil(this.destroy$)
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe({
             next: () => void this.router.navigateByUrl('/'),
             error: err => {
