@@ -8,7 +8,7 @@ import {
     TokenInterceptor,
     HttpTokenInterceptor
 } from '@app/core/interceptors';
-import { AppInitializeService } from './core';
+import { AppInitializeService } from './core/services';
 import { APP_ROUTES } from './app.routes';
 
 const initializeAppFactory = (injector: Injector) => {
