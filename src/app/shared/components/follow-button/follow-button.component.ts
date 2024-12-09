@@ -14,8 +14,7 @@ import { Profile } from '@app/modules/profile/models/profile.model';
     templateUrl: './follow-button.component.html',
     imports: [
         NgClass
-    ],
-    standalone: true
+    ]
 })
 export class FollowButtonComponent {
     @Input() profile!: Profile;

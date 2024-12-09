@@ -12,13 +12,12 @@ import { Article, ArticleListConfig } from '@app/modules/article/models';
     selector: 'app-article-list',
     styleUrls: ['article-list.component.scss'],
     templateUrl: './article-list.component.html',
-    standalone: true,
     imports: [
         ArticlePreviewComponent,
         NgForOf,
         NgClass,
         NgIf
-    ],
+    ]
 })
 export class ArticleListComponent {
     query!: ArticleListConfig;

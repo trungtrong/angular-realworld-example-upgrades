@@ -8,11 +8,10 @@ import { Article } from '@app/modules/article/models';
     selector: 'app-article-meta',
     templateUrl: './article-meta.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: true,
     imports: [
         RouterLink,
         DatePipe
-    ],
+    ]
 })
 export class ArticleMetaComponent {
     @Input() article!: Article;

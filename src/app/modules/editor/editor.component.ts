@@ -24,8 +24,7 @@ interface ArticleForm {
         ListErrorsComponent,
         ReactiveFormsModule,
         NgForOf
-    ],
-    standalone: true
+    ]
 })
 export class EditorComponent implements OnInit {
     tagList: string[] = [];

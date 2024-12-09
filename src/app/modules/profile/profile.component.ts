@@ -19,8 +19,7 @@ import { Profile } from './models/profile.model';
         RouterLink,
         RouterLinkActive,
         RouterOutlet
-    ],
-    standalone: true
+    ]
 })
 export class ProfileComponent implements OnInit {
     profile!: Profile;
