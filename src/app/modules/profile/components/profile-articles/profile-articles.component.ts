@@ -15,8 +15,7 @@ import { Profile } from '../../models/profile.model';
     templateUrl: './profile-articles.component.html',
     imports: [
         ArticleListComponent
-    ],
-    standalone: true
+    ]
 })
 export class ProfileArticlesComponent implements OnInit {
     profile!: Profile;

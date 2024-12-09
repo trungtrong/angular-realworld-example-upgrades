@@ -49,13 +49,12 @@ const COMPONENTS = [
 @Component({
     selector: 'app-article-page',
     templateUrl: './article.component.html',
-    standalone: true,
     imports: [
         BASE_MODULES,
         PIPES,
         DIRECTIVES,
         COMPONENTS,
-    ],
+    ]
 })
 export class ArticleComponent implements OnInit {
     article: Article = new Article();

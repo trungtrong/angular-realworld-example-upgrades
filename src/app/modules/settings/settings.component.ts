@@ -22,8 +22,7 @@ interface SettingsForm {
     imports: [
         ListErrorsComponent,
         ReactiveFormsModule
-    ],
-    standalone: true
+    ]
 })
 export class SettingsComponent implements OnInit {
     user!: User;

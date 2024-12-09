@@ -9,8 +9,7 @@ import { Errors } from '@app/shared/models';
     imports: [
         NgIf,
         NgForOf
-    ],
-    standalone: true
+    ]
 })
 export class ListErrorsComponent {
     errorList: string[] = [];

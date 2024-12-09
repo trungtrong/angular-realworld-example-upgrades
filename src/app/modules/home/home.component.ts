@@ -20,8 +20,7 @@ import { ArticleListConfig } from '../article/models';
         NgForOf,
         ShowAuthedDirective,
         RxLet
-    ],
-    standalone: true
+    ]
 })
 export class HomeComponent implements OnInit {
     isAuthenticated = false;

@@ -14,8 +14,7 @@ import { Profile } from '@app/modules/profile/models/profile.model';
     templateUrl: './profile-favorites.component.html',
     imports: [
         ArticleListComponent
-    ],
-    standalone: true
+    ]
 })
 export class ProfileFavoritesComponent implements OnInit {
     profile!: Profile;
