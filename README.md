@@ -16,3 +16,4 @@
         + Apply Control Flow syntax
         + Apply DestroyRef and takeUntilDestroyed.
         + Refactor Interceptor by using HttpInterceptorFn
+    + Upgrade to Angular v18.2.13
