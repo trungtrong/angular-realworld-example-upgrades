@@ -14,3 +14,5 @@
         + Enable Vite and esbuild for Angular CLI
     + Upgrade to Angular v17.3.12
         + Apply Control Flow syntax
+        + Apply DestroyRef and takeUntilDestroyed.
+        + Refactor Interceptor by using HttpInterceptorFn
