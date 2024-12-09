@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, DestroyRef, Output, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { switchMap, takeUntil } from 'rxjs/operators';
-import { EMPTY, Subject } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { EMPTY } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+//
 import { NgClass } from '@angular/common';
 import { Profile } from '../../models';
 import { ProfilesService, UserService } from '@app/core/services';
@@ -15,22 +17,17 @@ import { ProfilesService, UserService } from '@app/core/services';
     ],
     standalone: true
 })
-export class FollowButtonComponent implements OnDestroy {
+export class FollowButtonComponent {
     @Input() profile!: Profile;
     @Output() toggle = new EventEmitter<Profile>();
     isSubmitting = false;
-    destroy$ = new Subject<void>();
+    destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly router: Router,
         private readonly profileService: ProfilesService,
         private readonly userService: UserService
     ) {
-    }
-
-    ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
     }
 
     toggleFollowing(): void {
@@ -50,7 +47,7 @@ export class FollowButtonComponent implements OnDestroy {
                 }
             }
             ),
-            takeUntil(this.destroy$)
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe(
             {
                 next: (profile) => {

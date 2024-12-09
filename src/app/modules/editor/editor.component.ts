@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { UntypedFormGroup, ReactiveFormsModule, FormGroup, FormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForOf } from '@angular/common';
-import { combineLatest, filter, Subject, switchMap } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
+import { combineLatest, filter, switchMap } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 //
 import { ListErrorsComponent } from '@app/shared/components';
 import { Article, Errors } from '@app/shared/models';
@@ -25,7 +26,7 @@ interface ArticleForm {
     ],
     standalone: true
 })
-export class EditorComponent implements OnInit, OnDestroy {
+export class EditorComponent implements OnInit {
     tagList: string[] = [];
     articleForm: UntypedFormGroup = new FormGroup<ArticleForm>({
         title: new FormControl('', { nonNullable: true }),
@@ -36,7 +37,7 @@ export class EditorComponent implements OnInit, OnDestroy {
 
     errors: Errors | null = null;
     isSubmitting = false;
-    destroy$ = new Subject<void>();
+    destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly articleService: ArticlesService,
@@ -61,18 +62,13 @@ export class EditorComponent implements OnInit, OnDestroy {
                     return null;
                 }
             }),
-            takeUntil(this.destroy$)
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe((article: Article | null) => {
             if (article) {
                 this.tagList = article.tagList;
                 this.articleForm.patchValue(article);
             }
         });
-    }
-
-    ngOnDestroy() {
-        this.destroy$.next();
-        this.destroy$.complete();
     }
 
     addTag() {
@@ -101,7 +97,7 @@ export class EditorComponent implements OnInit, OnDestroy {
             ...this.articleForm.value as Article,
             tagList: this.tagList
         }))
-            .pipe(takeUntil(this.destroy$))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: article => void this.router.navigateByUrl('/article/' + article.slug),
                 error: err => {

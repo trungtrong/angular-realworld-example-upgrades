@@ -1,7 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap, takeUntil } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
 //
 import { ArticleListComponent } from '@app/shared/features/index';
 import { Profile, ArticleListConfig } from '@app/shared/models';
@@ -16,10 +18,10 @@ import { ProfilesService } from '@app/core/services';
     ],
     standalone: true
 })
-export class ProfileArticlesComponent implements OnInit, OnDestroy {
+export class ProfileArticlesComponent implements OnInit {
     profile!: Profile;
     articlesConfig!: ArticleListConfig;
-    destroy$ = new Subject<void>();
+    destroyRef = inject(DestroyRef);
 
     constructor(
         private route: ActivatedRoute,
@@ -30,7 +32,7 @@ export class ProfileArticlesComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.route.params.pipe(
             switchMap(({ username }) => this.profileService.get(username as string)),
-            takeUntil(this.destroy$)
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe({
             next: (profile: Profile) => {
                 this.profile = profile;
@@ -44,10 +46,4 @@ export class ProfileArticlesComponent implements OnInit, OnDestroy {
         }
         );
     }
-
-    ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
-    }
-
 }
