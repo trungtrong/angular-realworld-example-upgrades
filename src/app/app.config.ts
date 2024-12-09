@@ -5,7 +5,6 @@ import { ApplicationConfig } from '@angular/platform-browser';
 //
 import {
     ErrorInterceptor,
-    TokenInterceptor,
     HttpTokenInterceptor
 } from '@app/core/interceptors';
 import { AppInitializeService } from './core/services';
@@ -38,10 +37,13 @@ export const appConfig: ApplicationConfig = {
         },
         {
             provide: HTTP_INTERCEPTORS,
-            useClass: HttpTokenInterceptor,
+            useFactory: HttpTokenInterceptor,
             multi: true
         },
-        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useFactory: ErrorInterceptor,
+            multi: true
+        },
     ],
 };

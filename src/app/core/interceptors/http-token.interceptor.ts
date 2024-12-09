@@ -1,26 +1,23 @@
-import { Injectable } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
+import { inject } from '@angular/core';
+import { HttpEvent, HttpRequest, HttpInterceptorFn, HttpHandlerFn } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { JwtService } from '../services';
 
-@Injectable({ providedIn: 'root' })
-export class HttpTokenInterceptor implements HttpInterceptor {
-    constructor(private jwtService: JwtService) { }
+export const HttpTokenInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: HttpHandlerFn): Observable<HttpEvent<any>> => {
+    const jwtService = inject(JwtService);
+    const headersConfig = {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+    };
 
-    intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const headersConfig = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        };
+    const token = jwtService.getToken();
 
-        const token = this.jwtService.getToken();
-
-        if (token) {
-            headersConfig['Authorization'] = `Token ${token}`;
-        }
-
-        const request = req.clone({ setHeaders: headersConfig });
-        return next.handle(request);
+    if (token) {
+        headersConfig['Authorization'] = `Token ${token}`;
     }
-}
+
+    const request = req.clone({ setHeaders: headersConfig });
+    return next(request);
+};
+
