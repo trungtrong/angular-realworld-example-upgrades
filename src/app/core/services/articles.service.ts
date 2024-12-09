@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Article, ArticleListConfig } from '@app/shared/models';
 import { ApiService } from './api.service';
 import { HttpParams } from '@angular/common/http';
+import { Article, ArticleListConfig } from '@app/modules/article/models';
 
 @Injectable({ providedIn: 'root' })
 export class ArticlesService {

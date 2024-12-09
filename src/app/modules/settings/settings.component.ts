@@ -1,8 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 //
 import { ListErrorsComponent } from '@app/shared/components/index';
 import { Errors, User } from '@app/shared/models';
@@ -25,7 +25,7 @@ interface SettingsForm {
     ],
     standalone: true
 })
-export class SettingsComponent implements OnInit, OnDestroy {
+export class SettingsComponent implements OnInit {
     user!: User;
     settingsForm = new FormGroup<SettingsForm>({
         image: new FormControl('', { nonNullable: true }),
@@ -39,7 +39,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
     });
     errors: Errors | null = null;
     isSubmitting = false;
-    destroy$ = new Subject<void>();
+    destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly router: Router,
@@ -53,11 +53,6 @@ export class SettingsComponent implements OnInit, OnDestroy {
         this.settingsForm.patchValue(this.userService.getCurrentUser());
     }
 
-    ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
-    }
-
     logout(): void {
         this.userService.logout();
     }
@@ -67,7 +62,7 @@ export class SettingsComponent implements OnInit, OnDestroy {
 
         this.userService
             .update(this.settingsForm.value)
-            .pipe(takeUntil(this.destroy$))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: ({ user }) => void this.router.navigateByUrl('/profile/' + user.username),
                 error: (err) => {

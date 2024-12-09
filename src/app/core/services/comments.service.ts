@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { ApiService } from './api.service';
-import { Comment } from '@app/shared/models';
 import { map } from 'rxjs/operators';
+//
+import { ApiService } from './api.service';
+import { Comment } from '@app/modules/article/models';
 
 
 @Injectable({ providedIn: 'root' })

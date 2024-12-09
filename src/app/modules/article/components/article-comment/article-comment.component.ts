@@ -4,7 +4,8 @@ import { map } from 'rxjs/operators';
 import { AsyncPipe, DatePipe, NgIf } from '@angular/common';
 //
 import { UserService } from '@app/core/services';
-import { Comment, User } from '@app/shared/models';
+import { User } from '@app/shared/models';
+import { Comment } from '../../models';
 
 @Component({
     selector: 'app-article-comment',

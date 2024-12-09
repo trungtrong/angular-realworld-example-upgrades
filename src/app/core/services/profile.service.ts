@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ApiService } from './api.service';
-import { Profile } from '@app/shared/models';
 import { map } from 'rxjs/operators';
+import { Profile } from '@app/modules/profile/models';
 
 @Injectable({ providedIn: 'root' })
 export class ProfilesService {

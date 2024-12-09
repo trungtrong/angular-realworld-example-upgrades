@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
-import { catchError, switchMap, takeUntil } from 'rxjs/operators';
-import { of, Subject, combineLatest, throwError } from 'rxjs';
-import { Article, Comment, Errors, Profile, User } from '@app/shared/models';
+import { catchError, switchMap } from 'rxjs/operators';
+import { of, combineLatest, throwError } from 'rxjs';
+import { Errors, User } from '@app/shared/models';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 //
 import { ArticleMetaComponent } from '@app/shared/features/index';
 import {
@@ -16,6 +17,8 @@ import { MarkdownPipe } from './pipes';
 import { ArticleCommentComponent } from './components';
 import { ShowAuthedDirective } from '@app/common/directives/show-authed.directive';
 import { ArticlesService, CommentsService, UserService } from '@app/core/services';
+import { Article, Comment } from './models';
+import { Profile } from '../profile/models';
 
 const BASE_MODULES = [
     FormsModule,
@@ -54,7 +57,7 @@ const COMPONENTS = [
         COMPONENTS,
     ],
 })
-export class ArticleComponent implements OnInit, OnDestroy {
+export class ArticleComponent implements OnInit {
     article: Article = new Article();
     currentUser!: User | null;
     comments: Comment[] = [];
@@ -65,8 +68,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
 
     isSubmitting = false;
     isDeleting = false;
-    destroy$ = new Subject<void>();
-
+    destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly route: ActivatedRoute,
@@ -98,11 +100,6 @@ export class ArticleComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
-    }
-
     onToggleFavorite(favorited: boolean): void {
         this.article.favorited = favorited;
 
@@ -121,8 +118,9 @@ export class ArticleComponent implements OnInit, OnDestroy {
         this.isDeleting = true;
 
         this.articleService.delete(this.article.slug)
-            .pipe(takeUntil(this.destroy$))
-            .subscribe(() => {
+            .pipe(
+                takeUntilDestroyed(this.destroyRef)
+            ).subscribe(() => {
                 void this.router.navigateByUrl('/');
             });
     }
@@ -132,7 +130,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
         this.commentFormErrors = null;
 
         this.commentsService.add(this.article.slug, this.commentControl.value)
-            .pipe(takeUntil(this.destroy$))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: comment => {
                     this.comments.unshift(comment);
@@ -150,7 +148,7 @@ export class ArticleComponent implements OnInit, OnDestroy {
     deleteComment(comment: Comment): void {
         this.commentsService
             .delete(comment.id, this.article.slug)
-            .pipe(takeUntil(this.destroy$))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.comments = this.comments.filter(item => item !== comment);
             });

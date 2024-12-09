@@ -12,3 +12,7 @@
         + [PR #3](https://github.com/trungtrong/angular-realworld-example-upgrades/pull/3)
     + Upgrade to Angular v16.12.2
         + Enable Vite and esbuild for Angular CLI
+    + Upgrade to Angular v17.3.12
+        + Apply Control Flow syntax
+        + Apply DestroyRef and takeUntilDestroyed.
+        + Refactor Interceptor by using HttpInterceptorFn

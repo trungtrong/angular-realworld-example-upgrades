@@ -1,14 +1,14 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgClass, NgForOf } from '@angular/common';
-import { takeUntil, tap } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { RxLet } from '@rx-angular/template/let';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 //
 import { ArticleListComponent } from '@app/shared/features/index';
 import { ShowAuthedDirective } from '@app/common/directives/show-authed.directive';
-import { ArticleListConfig } from '@app/shared/models';
 import { TagsService, UserService } from '@app/core/services';
+import { ArticleListConfig } from '../article/models';
 
 @Component({
     selector: 'app-home-page',
@@ -23,7 +23,7 @@ import { TagsService, UserService } from '@app/core/services';
     ],
     standalone: true
 })
-export class HomeComponent implements OnInit, OnDestroy {
+export class HomeComponent implements OnInit {
     isAuthenticated = false;
     listConfig: ArticleListConfig = new ArticleListConfig({
         type: 'all',
@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
     tags$ = inject(TagsService).getAll().pipe(tap(() => this.tagsLoaded = true));
     tagsLoaded = false;
-    destroy$ = new Subject<void>();
+    destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly router: Router,
@@ -48,14 +48,10 @@ export class HomeComponent implements OnInit, OnDestroy {
                     this.setListTo('all');
                 }
             }),
-            takeUntil(this.destroy$)
+            takeUntilDestroyed(this.destroyRef)
         ).subscribe((isAuthenticated: boolean) => this.isAuthenticated = isAuthenticated);
     }
 
-    ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
-    }
 
     setListTo(type: string = '', filters: object = {}) {
         // If feed is requested but user is not authenticated, redirect to login

@@ -1,6 +1,5 @@
-<div class="profile-page"
-     *ngIf="profile">
-
+@if (profile) {
+<div class="profile-page">
     <div class="user-info">
         <div class="container">
             <div class="row">
@@ -10,15 +9,16 @@
                          class="user-img" />
                     <h4>{{ profile.username }}</h4>
                     <p>{{ profile.bio }}</p>
-                    <app-follow-button *ngIf="!isUser"
-                                       [profile]="profile"
+                    @if (!isUser) {
+                    <app-follow-button [profile]="profile"
                                        (toggle)="onToggleFollowing($event)">
                     </app-follow-button>
+                    } @else {
                     <a [routerLink]="['/settings']"
-                       *ngIf="isUser"
                        class="btn btn-sm btn-outline-secondary action-btn">
                         <i class="ion-gear-a"></i> Edit Profile Settings
                     </a>
+                    }
                 </div>
 
             </div>
@@ -57,3 +57,4 @@
     </div>
 
 </div>
+}

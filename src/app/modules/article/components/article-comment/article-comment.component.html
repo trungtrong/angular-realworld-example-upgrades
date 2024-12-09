@@ -1,5 +1,5 @@
-<div class="card"
-     *ngIf="comment">
+@if (comment) {
+<div class="card">
     <div class="card-block">
         <p class="card-text">
             {{ comment.body }}
@@ -26,3 +26,4 @@
         </span>
     </div>
 </div>
+}
