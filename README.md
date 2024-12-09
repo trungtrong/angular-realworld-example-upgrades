@@ -17,3 +17,4 @@
         + Apply DestroyRef and takeUntilDestroyed.
         + Refactor Interceptor by using HttpInterceptorFn
     + Upgrade to Angular v18.2.13
+    + Upgrade to Angular v19.0.3
