@@ -6,6 +6,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 import { of, combineLatest, throwError } from 'rxjs';
 import { Errors, User } from '@app/shared/models';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Store } from '@ngxs/store';
 //
 import { ArticleMetaComponent } from '@app/shared/features/index';
 import {
@@ -16,9 +17,10 @@ import {
 import { MarkdownPipe } from './pipes';
 import { ArticleCommentComponent } from './components';
 import { ShowAuthedDirective } from '@app/common/directives/show-authed.directive';
-import { ArticlesService, CommentsService, UserService } from '@app/core/services';
+import { ArticlesService, CommentsService } from '@app/core/services';
 import { Article, Comment } from './models';
 import { Profile } from '../profile/models';
+import { UserSelectors } from '@app/core/store/user/user.selectors';
 
 const BASE_MODULES = [
     FormsModule,
@@ -58,6 +60,8 @@ const COMPONENTS = [
     ],
 })
 export class ArticleComponent implements OnInit {
+    private _currentUser$ = this._store.select(UserSelectors.user);
+
     article: Article = new Article();
     currentUser!: User | null;
     comments: Comment[] = [];
@@ -71,11 +75,11 @@ export class ArticleComponent implements OnInit {
     destroyRef = inject(DestroyRef);
 
     constructor(
+        private readonly router: Router,
         private readonly route: ActivatedRoute,
+        private readonly _store: Store,
         private readonly articleService: ArticlesService,
         private readonly commentsService: CommentsService,
-        private readonly router: Router,
-        private readonly userService: UserService
     ) {
     }
 
@@ -85,7 +89,7 @@ export class ArticleComponent implements OnInit {
             switchMap(article => combineLatest([
                 of(article),
                 this.commentsService.getAll(article.slug),
-                this.userService.currentUser
+                this._currentUser$
             ])
             ),
             catchError((err) => {

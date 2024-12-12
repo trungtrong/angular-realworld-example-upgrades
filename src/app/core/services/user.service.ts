@@ -1,28 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 
 import { JwtService } from './jwt.service';
-import { map, distinctUntilChanged, tap, shareReplay } from 'rxjs/operators';
+import { tap, shareReplay } from 'rxjs/operators';
 import { HttpClient } from '@angular/common/http';
 
 import { User } from '@app/shared/models';
 import { Router } from '@angular/router';
 import { ApiService } from './api.service';
+import * as UserActions from './../store/user/user.actions';
 
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
-    private currentUserSubject = new BehaviorSubject<User | null>(null);
-    public currentUser = this.currentUserSubject.asObservable().pipe(distinctUntilChanged());
-    get currentUserData() {
-        return this.currentUserSubject.value;
-    }
-
-    public isAuthenticated = this.currentUser.pipe(map(user => !!user));
-
     constructor(
         private readonly router: Router,
         private readonly http: HttpClient,
+        private readonly _store: Store,
         private apiService: ApiService,
         private readonly jwtService: JwtService,
     ) {
@@ -30,24 +25,19 @@ export class UserService {
 
     login(credentials: { email: string; password: string }): Observable<{ user: User }> {
         return this.apiService.post<{ user: User }>('/users/login', { user: credentials })
-            .pipe(tap(({ user }) => this.setAuth(user)));
+            .pipe(tap(({ user }) => this._store.dispatch(new UserActions.SetUser(user))));
     }
 
     register(credentials: { username: string; email: string; password: string }): Observable<{ user: User }> {
         return this.apiService.post<{ user: User }>('/users', { user: credentials })
-            .pipe(tap(({ user }) => this.setAuth(user)));
-    }
-
-    logout(): void {
-        this.purgeAuth();
-        void this.router.navigateByUrl('/');
+            .pipe(tap(({ user }) => this._store.dispatch(new UserActions.SetUser(user))));
     }
 
     getCurrentUser(): Observable<{ user: User }> {
         return this.apiService.get<{ user: User }>('/user').pipe(
             tap({
-                next: ({ user }) => this.setAuth(user),
-                error: () => this.purgeAuth()
+                next: ({ user }) => this._store.dispatch(new UserActions.SetUser(user)),
+                error: () => this._store.dispatch(new UserActions.DeleteUser())
             }
             ),
             shareReplay(1)
@@ -58,18 +48,7 @@ export class UserService {
         return this.apiService.put<{ user: User }>('/user', { user })
             // eslint-disable-next-line @typescript-eslint/no-shadow
             .pipe(tap(({ user }) => {
-                this.currentUserSubject.next(user);
+                this._store.dispatch(new UserActions.UpdateUser(user));
             }));
     }
-
-    setAuth(user: User): void {
-        this.jwtService.saveToken(user.token);
-        this.currentUserSubject.next(user);
-    }
-
-    purgeAuth(): void {
-        this.jwtService.destroyToken();
-        this.currentUserSubject.next(null);
-    }
-
 }

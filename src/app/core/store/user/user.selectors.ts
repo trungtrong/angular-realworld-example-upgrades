@@ -4,10 +4,10 @@ import { UserState } from './user.state';
 import { IUserState } from './user.model';
 import { User } from '@app/shared/models';
 
-export class UserLookupSelectors {
+export class UserSelectors {
     @Selector([UserState])
     public static user(state: IUserState): User {
-        return state.user;
+        return state?.user ?? null;
     }
 
     @Selector([UserState])
@@ -22,6 +22,6 @@ export class UserLookupSelectors {
 
     @Selector([UserState])
     public static isLoggedIn(state: IUserState): boolean {
-        return !!state?.user && !!state?.user?.token;
+        return !!state?.user;
     }
 }

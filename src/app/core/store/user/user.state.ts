@@ -26,8 +26,8 @@ export class UserState {
     ) {
     }
 
-    @Action(UserActions.UpdateUser)
-    setUser(context: StateContext<IUserState>, { payload }: UserActions.UpdateUser) {
+    @Action(UserActions.SetUser)
+    setUser(context: StateContext<IUserState>, { payload }: UserActions.SetUser) {
         this._jwtService.saveToken(payload?.token);
         context.patchState({
             user: payload
@@ -56,11 +56,7 @@ export class UserState {
 
     @Action(UserActions.Logout)
     logout(context: StateContext<IUserState>) {
-        this._jwtService.destroyToken();
-        context.patchState({
-            user: null,
-            errors: []
-        });
+        context.dispatch(new UserActions.DeleteUser());
         void this._router.navigateByUrl('/');
     }
 }
