@@ -8,6 +8,7 @@ import {
 } from '@app/core/interceptors';
 import { AppInitializeService } from './core/services';
 import { APP_ROUTES } from './app.routes';
+import { provideStore } from '@ngxs/store';
 
 const initializeAppFactory = (injector: Injector) => {
     const _appInitService = injector.get(AppInitializeService);
@@ -26,6 +27,7 @@ export const appConfig: ApplicationConfig = {
             APP_ROUTES,
             withPreloading(PreloadAllModules)
         ),
+        provideStore(),
         {
             provide: APP_INITIALIZER,
             useFactory: initializeAppFactory,
