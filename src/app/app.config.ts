@@ -1,6 +1,7 @@
-import { APP_INITIALIZER, ApplicationConfig, importProvidersFrom, Injector } from '@angular/core';
+import { APP_INITIALIZER, ApplicationConfig, EnvironmentProviders, importProvidersFrom, Injector } from '@angular/core';
 import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { PreloadAllModules, provideRouter, withPreloading } from '@angular/router';
+import { provideStore } from '@ngxs/store';
 //
 import {
     ErrorInterceptor,
@@ -8,7 +9,10 @@ import {
 } from '@app/core/interceptors';
 import { AppInitializeService } from './core/services';
 import { APP_ROUTES } from './app.routes';
-import { provideStore } from '@ngxs/store';
+//
+import { UserState } from '@app/core/store/user/user.state';
+import { environment } from '@environment';
+import { withNgxsReduxDevtoolsPlugin } from '@ngxs/devtools-plugin';
 
 const initializeAppFactory = (injector: Injector) => {
     const _appInitService = injector.get(AppInitializeService);
@@ -16,6 +20,17 @@ const initializeAppFactory = (injector: Injector) => {
 };
 
 const BASE_MODULES = [];
+
+const NGXS_PROVIDERS: EnvironmentProviders[] = [
+    provideStore([
+        UserState
+    ], {
+        developmentMode: !environment.production,
+    }),
+    withNgxsReduxDevtoolsPlugin({
+        disabled: environment.production,
+    }),
+];
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -27,7 +42,7 @@ export const appConfig: ApplicationConfig = {
             APP_ROUTES,
             withPreloading(PreloadAllModules)
         ),
-        provideStore(),
+        ...NGXS_PROVIDERS,
         {
             provide: APP_INITIALIZER,
             useFactory: initializeAppFactory,
