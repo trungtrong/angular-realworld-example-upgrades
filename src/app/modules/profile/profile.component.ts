@@ -4,11 +4,13 @@ import { catchError, map, switchMap } from 'rxjs/operators';
 import { combineLatest, of, throwError } from 'rxjs';
 import { NgIf } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Store } from '@ngxs/store';
 
 //
 import { FollowButtonComponent } from '@app/shared/components';
-import { ProfilesService, UserService } from '@app/core/services';
+import { ProfilesService } from '@app/core/services';
 import { Profile } from './models/profile.model';
+import { UserSelectors } from '@app/core/store/user/user.selectors';
 
 @Component({
     selector: 'app-profile-page',
@@ -23,6 +25,8 @@ import { Profile } from './models/profile.model';
     standalone: true
 })
 export class ProfileComponent implements OnInit {
+    private _currentUser$ = this._store.select(UserSelectors.user);
+
     profile!: Profile;
     isUser: boolean = false;
     destroyRef = inject(DestroyRef);
@@ -30,7 +34,7 @@ export class ProfileComponent implements OnInit {
     constructor(
         private readonly route: ActivatedRoute,
         private readonly router: Router,
-        private readonly userService: UserService,
+        private readonly _store: Store,
         private readonly profileService: ProfilesService
     ) {
     }
@@ -45,7 +49,7 @@ export class ProfileComponent implements OnInit {
             }),
             switchMap(profile => combineLatest([
                 of(profile),
-                this.userService.currentUser
+                this._currentUser$
             ])),
             takeUntilDestroyed(this.destroyRef)
         ).subscribe(([profile, user]) => {

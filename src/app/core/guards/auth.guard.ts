@@ -1,10 +1,9 @@
 import { inject } from '@angular/core';
-import { take } from 'rxjs/operators';
-//
-import { UserService } from '@app/core/services';
+import { Store } from '@ngxs/store';
 import { CanActivateFn } from '@angular/router';
+import { UserSelectors } from '../store/user/user.selectors';
 
 export const AuthGuard: CanActivateFn = () => {
-    const userService = inject(UserService);
-    return userService.isAuthenticated.pipe(take(1));
+    const _store = inject(Store);
+    return _store.select(UserSelectors.isLoggedIn);
 };

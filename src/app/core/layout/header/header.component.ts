@@ -1,10 +1,10 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {AsyncPipe, NgIf} from '@angular/common';
 //
-import { UserService } from '@app/core/services';
-import { User } from '@app/shared/models';
 import { ShowAuthedDirective } from '@app/common/directives/show-authed.directive';
+import { Store } from '@ngxs/store';
+import { UserSelectors } from '@app/core/store/user/user.selectors';
 
 @Component({
     selector: 'app-layout-header',
@@ -19,9 +19,9 @@ import { ShowAuthedDirective } from '@app/common/directives/show-authed.directiv
     ],
 })
 export class HeaderComponent {
-    currentUser$ = inject(UserService).currentUser;
+    currentUser$ = this._store.select(UserSelectors.user);
 
     constructor(
-        private userService: UserService
+        private readonly _store: Store,
     ) { }
 }

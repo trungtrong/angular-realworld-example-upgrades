@@ -1,12 +1,13 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Store } from '@ngxs/store';
 //
 import { ListErrorsComponent } from '@app/shared/components/index';
 import { Errors, User } from '@app/shared/models';
 import { UserService } from '@app/core/services';
+import * as UserActions from './../../core/store/user/user.actions';
 
 interface SettingsForm {
     image: FormControl<string>;
@@ -43,6 +44,7 @@ export class SettingsComponent implements OnInit {
 
     constructor(
         private readonly router: Router,
+        private readonly _store: Store,
         private readonly userService: UserService,
     ) {
     }
@@ -54,7 +56,7 @@ export class SettingsComponent implements OnInit {
     }
 
     logout(): void {
-        this.userService.logout();
+        this._store.dispatch(new UserActions.Logout());
     }
 
     submitForm() {

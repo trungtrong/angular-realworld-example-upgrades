@@ -3,11 +3,12 @@ import { Router } from '@angular/router';
 import { switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Store } from '@ngxs/store';
 //
 import { NgClass } from '@angular/common';
 import { ProfilesService, UserService } from '@app/core/services';
 import { Profile } from '@app/modules/profile/models/profile.model';
-//
+import { UserSelectors } from '@app/core/store/user/user.selectors';
 
 @Component({
     selector: 'app-follow-button',
@@ -18,13 +19,18 @@ import { Profile } from '@app/modules/profile/models/profile.model';
     standalone: true
 })
 export class FollowButtonComponent {
+    private _isLoggedIn$ = this._store.select(UserSelectors.isLoggedIn);
+
     @Input() profile!: Profile;
     @Output() toggle = new EventEmitter<Profile>();
+
     isSubmitting = false;
+
     destroyRef = inject(DestroyRef);
 
     constructor(
         private readonly router: Router,
+        private readonly _store: Store,
         private readonly profileService: ProfilesService,
         private readonly userService: UserService
     ) {
@@ -33,7 +39,7 @@ export class FollowButtonComponent {
     toggleFollowing(): void {
         this.isSubmitting = true;
 
-        this.userService.isAuthenticated.pipe(
+        this._isLoggedIn$.pipe(
             switchMap((isAuthenticated: boolean) => {
                 if (!isAuthenticated) {
                     void this.router.navigateByUrl('/login');

@@ -7,8 +7,6 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { NgIf } from '@angular/common';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 //
 import { ListErrorsComponent } from '@app/shared/components';
@@ -81,7 +79,9 @@ export class AuthComponent implements OnInit {
         observable.pipe(
             takeUntilDestroyed(this.destroyRef)
         ).subscribe({
-            next: () => void this.router.navigateByUrl('/'),
+            next: () => {
+                void this.router.navigateByUrl('/');
+            },
             error: err => {
                 this.errors = err;
                 this.isSubmitting = false;
